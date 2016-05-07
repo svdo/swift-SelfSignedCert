@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SelfSignedCertTests/DERTests.swift"
+            timestampString = "484319992.561699"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "spec()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SelfSignedCertTests.DERTests.(spec () -&gt; ()).(closure #2).(closure #2)"
+                  moduleName = "SelfSignedCertTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stefan/Documents/Projects/Indie/SelfSignedCert/SelfSignedCertTests/DERTests.swift"
+                  timestampString = "484320057.618999"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42"
+                  offsetFromSymbolStart = "39">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SelfSignedCertTests.DERTests.(spec () -&gt; ()).(closure #2).(closure #2).(implicit closure #1)"
+                  moduleName = "SelfSignedCertTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/stefan/Documents/Projects/Indie/SelfSignedCert/SelfSignedCertTests/DERTests.swift"
+                  timestampString = "484320057.619238"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42"
+                  offsetFromSymbolStart = "31">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

@@ -7,9 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DAA556DD222F9CE19F2CFE2 /* Pods_SelfSignedCertTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB119BBFA45171EE61D5EE4 /* Pods_SelfSignedCertTests.framework */; };
+		D91B6DEBC12FD1C69CAFD884 /* Pods_SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C48B6600A3FDD1FE1DB951 /* Pods_SelfSignedCert.framework */; };
 		F8B8C5521CDBCCB800FC4174 /* SelfSignedCert.h in Headers */ = {isa = PBXBuildFile; fileRef = F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F8B8C5591CDBCCB800FC4174 /* SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */; };
-		F8B8C55E1CDBCCB800FC4174 /* SelfSignedCertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C55D1CDBCCB800FC4174 /* SelfSignedCertTests.swift */; };
+		F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */; };
+		F8B8C5691CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5681CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift */; };
+		F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */; };
+		F8B8C56D1CDBDBBE00FC4174 /* CertificateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C56C1CDBDBBE00FC4174 /* CertificateRequest.swift */; };
+		F8B8C56F1CDCC79600FC4174 /* SecKey+KeyPairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C56E1CDCC79600FC4174 /* SecKey+KeyPairTests.swift */; };
+		F8B8C5711CDCDE0F00FC4174 /* CertificateRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */; };
+		F8B8C5771CDCF42800FC4174 /* DERTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5761CDCF42800FC4174 /* DERTests.swift */; };
+		F8B8C5791CDE2CFB00FC4174 /* DEREncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +32,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5FB119BBFA45171EE61D5EE4 /* Pods_SelfSignedCertTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SelfSignedCertTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		87B040C293FC7AE383E045A6 /* Pods-SelfSignedCertTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCertTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCertTests/Pods-SelfSignedCertTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8C5633194F75960307E9CE33 /* Pods-SelfSignedCertTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCertTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCertTests/Pods-SelfSignedCertTests.release.xcconfig"; sourceTree = "<group>"; };
+		9211204027A50C2C8F16ED23 /* Pods-SelfSignedCert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCert.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCert/Pods-SelfSignedCert.debug.xcconfig"; sourceTree = "<group>"; };
+		92F608CC5FDD2F26F9B13501 /* Pods-SelfSignedCert.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCert.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCert/Pods-SelfSignedCert.release.xcconfig"; sourceTree = "<group>"; };
+		F7C48B6600A3FDD1FE1DB951 /* Pods_SelfSignedCert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SelfSignedCert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SelfSignedCert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfSignedCert.h; sourceTree = "<group>"; };
 		F8B8C5531CDBCCB800FC4174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8B8C5581CDBCCB800FC4174 /* SelfSignedCertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SelfSignedCertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8B8C55D1CDBCCB800FC4174 /* SelfSignedCertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSignedCertTests.swift; sourceTree = "<group>"; };
+		F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecIdentity+SelfSignedTests.swift"; sourceTree = "<group>"; };
 		F8B8C55F1CDBCCB800FC4174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8B8C5681CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecIdentity+SelfSigned.swift"; sourceTree = "<group>"; };
+		F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+KeyPair.swift"; sourceTree = "<group>"; };
+		F8B8C56C1CDBDBBE00FC4174 /* CertificateRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateRequest.swift; sourceTree = "<group>"; };
+		F8B8C56E1CDCC79600FC4174 /* SecKey+KeyPairTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+KeyPairTests.swift"; sourceTree = "<group>"; };
+		F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateRequestTests.swift; sourceTree = "<group>"; };
+		F8B8C5761CDCF42800FC4174 /* DERTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DERTests.swift; sourceTree = "<group>"; };
+		F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DEREncoding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D91B6DEBC12FD1C69CAFD884 /* Pods_SelfSignedCert.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,18 +67,41 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8B8C5591CDBCCB800FC4174 /* SelfSignedCert.framework in Frameworks */,
+				2DAA556DD222F9CE19F2CFE2 /* Pods_SelfSignedCertTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06DFF4CF3B6BF0764B75712B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F7C48B6600A3FDD1FE1DB951 /* Pods_SelfSignedCert.framework */,
+				5FB119BBFA45171EE61D5EE4 /* Pods_SelfSignedCertTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		654C79C8908062E7A1BEE691 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9211204027A50C2C8F16ED23 /* Pods-SelfSignedCert.debug.xcconfig */,
+				92F608CC5FDD2F26F9B13501 /* Pods-SelfSignedCert.release.xcconfig */,
+				87B040C293FC7AE383E045A6 /* Pods-SelfSignedCertTests.debug.xcconfig */,
+				8C5633194F75960307E9CE33 /* Pods-SelfSignedCertTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		F8B8C5441CDBCCB800FC4174 = {
 			isa = PBXGroup;
 			children = (
 				F8B8C5501CDBCCB800FC4174 /* SelfSignedCert */,
 				F8B8C55C1CDBCCB800FC4174 /* SelfSignedCertTests */,
 				F8B8C54F1CDBCCB800FC4174 /* Products */,
+				654C79C8908062E7A1BEE691 /* Pods */,
+				06DFF4CF3B6BF0764B75712B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +119,10 @@
 			children = (
 				F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */,
 				F8B8C5531CDBCCB800FC4174 /* Info.plist */,
+				F8B8C5681CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift */,
+				F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */,
+				F8B8C56C1CDBDBBE00FC4174 /* CertificateRequest.swift */,
+				F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */,
 			);
 			path = SelfSignedCert;
 			sourceTree = "<group>";
@@ -80,8 +130,11 @@
 		F8B8C55C1CDBCCB800FC4174 /* SelfSignedCertTests */ = {
 			isa = PBXGroup;
 			children = (
-				F8B8C55D1CDBCCB800FC4174 /* SelfSignedCertTests.swift */,
 				F8B8C55F1CDBCCB800FC4174 /* Info.plist */,
+				F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */,
+				F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */,
+				F8B8C5761CDCF42800FC4174 /* DERTests.swift */,
+				F8B8C56E1CDCC79600FC4174 /* SecKey+KeyPairTests.swift */,
 			);
 			path = SelfSignedCertTests;
 			sourceTree = "<group>";
@@ -104,10 +157,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F8B8C5621CDBCCB800FC4174 /* Build configuration list for PBXNativeTarget "SelfSignedCert" */;
 			buildPhases = (
+				AD5E502AD1BD67E9BAC20826 /* 📦 Check Pods Manifest.lock */,
 				F8B8C5491CDBCCB800FC4174 /* Sources */,
 				F8B8C54A1CDBCCB800FC4174 /* Frameworks */,
 				F8B8C54B1CDBCCB800FC4174 /* Headers */,
 				F8B8C54C1CDBCCB800FC4174 /* Resources */,
+				EF70ABB4122674716BDD905A /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -122,9 +177,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F8B8C5651CDBCCB800FC4174 /* Build configuration list for PBXNativeTarget "SelfSignedCertTests" */;
 			buildPhases = (
+				17F4DA63FA9685B403AC4E39 /* 📦 Check Pods Manifest.lock */,
 				F8B8C5541CDBCCB800FC4174 /* Sources */,
 				F8B8C5551CDBCCB800FC4174 /* Frameworks */,
 				F8B8C5561CDBCCB800FC4174 /* Resources */,
+				7AC5F28A0C17E57EE1D0B417 /* 📦 Embed Pods Frameworks */,
+				D5835ACBAD96218FC63EF51D /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -189,11 +247,93 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		17F4DA63FA9685B403AC4E39 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7AC5F28A0C17E57EE1D0B417 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SelfSignedCertTests/Pods-SelfSignedCertTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD5E502AD1BD67E9BAC20826 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D5835ACBAD96218FC63EF51D /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SelfSignedCertTests/Pods-SelfSignedCertTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EF70ABB4122674716BDD905A /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SelfSignedCert/Pods-SelfSignedCert-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F8B8C5491CDBCCB800FC4174 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8B8C5691CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift in Sources */,
+				F8B8C56D1CDBDBBE00FC4174 /* CertificateRequest.swift in Sources */,
+				F8B8C5791CDE2CFB00FC4174 /* DEREncoding.swift in Sources */,
+				F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +341,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8B8C55E1CDBCCB800FC4174 /* SelfSignedCertTests.swift in Sources */,
+				F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */,
+				F8B8C5771CDCF42800FC4174 /* DERTests.swift in Sources */,
+				F8B8C56F1CDCC79600FC4174 /* SecKey+KeyPairTests.swift in Sources */,
+				F8B8C5711CDCDE0F00FC4174 /* CertificateRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +452,9 @@
 		};
 		F8B8C5631CDBCCB800FC4174 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9211204027A50C2C8F16ED23 /* Pods-SelfSignedCert.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -320,12 +465,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vandenoord.SelfSignedCert;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		F8B8C5641CDBCCB800FC4174 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 92F608CC5FDD2F26F9B13501 /* Pods-SelfSignedCert.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -341,6 +489,7 @@
 		};
 		F8B8C5661CDBCCB800FC4174 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87B040C293FC7AE383E045A6 /* Pods-SelfSignedCertTests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = SelfSignedCertTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -351,6 +500,7 @@
 		};
 		F8B8C5671CDBCCB800FC4174 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8C5633194F75960307E9CE33 /* Pods-SelfSignedCertTests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = SelfSignedCertTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -378,6 +528,7 @@
 				F8B8C5641CDBCCB800FC4174 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F8B8C5651CDBCCB800FC4174 /* Build configuration list for PBXNativeTarget "SelfSignedCertTests" */ = {
 			isa = XCConfigurationList;
@@ -386,6 +537,7 @@
 				F8B8C5671CDBCCB800FC4174 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -1,0 +1,6 @@
+framework module SwiftBytes {
+  umbrella header "SwiftBytes-umbrella.h"
+
+  export *
+  module * { export * }
+}

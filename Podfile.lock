@@ -1,0 +1,18 @@
+PODS:
+  - Nimble (4.0.1)
+  - Quick (0.9.2)
+  - SwiftBytes (0.3.1)
+
+DEPENDENCIES:
+  - Nimble (~> 4.0)
+  - Quick (~> 0.9)
+  - SwiftBytes (~> 0.2)
+
+SPEC CHECKSUMS:
+  Nimble: 0f3c8b8b084cda391209c3c5efbb48bedeeb920a
+  Quick: 18d057bc66451eedd5d1c8dc99ba2a5db6e60226
+  SwiftBytes: 262e08479bc103bbb4eccd296e8b8ffb2102f7c3
+
+PODFILE CHECKSUM: 7c614e142adb44089fe0ed4eea5ee18cd31f03e9
+
+COCOAPODS: 1.0.0.rc.1
