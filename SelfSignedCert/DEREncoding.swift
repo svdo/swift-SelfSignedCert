@@ -35,8 +35,6 @@ extension IntegerType {
     }
 }
 
-
-
 extension SequenceType where Generator.Element:IntegerType {
     func removeLeading(number:Generator.Element) -> [Generator.Element] {
         if self.minElement() == nil { return [] }
@@ -74,6 +72,13 @@ extension SequenceType where Generator.Element:IntegerType {
             return [0xFF] + removedFF
         }
         return removedFF
+    }
+}
+
+extension String {
+    func toDER() -> [UInt8] {
+        let utf8Bytes = [UInt8](self.utf8)
+        return writeDER(tag: 12, constructed: false, bytes: utf8Bytes)
     }
 }
 
