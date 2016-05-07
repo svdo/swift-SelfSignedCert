@@ -82,6 +82,20 @@ extension String {
     }
 }
 
+var berGeneralizedTimeFormatter: NSDateFormatter {
+    let df = NSDateFormatter()
+    df.dateFormat = "yyyyMMddHHmmss'Z'"
+    df.timeZone = NSTimeZone(name: "GMT")
+    return df
+}
+
+extension NSDate {
+    func toDER() -> [UInt8] {
+        let dateString = berGeneralizedTimeFormatter.stringFromDate(self)
+        return writeDER(tag: 24, constructed: false, bytes: [UInt8](dateString.utf8))
+    }
+}
+
 func writeDER(tag tag:UInt8, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
     let constructedBits : UInt8 = (constructed ? 1 : 0) << 5
     let classBits : UInt8 = 0

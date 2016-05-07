@@ -35,6 +35,10 @@ class DERTests : QuickSpec {
                 expect("hello".toDER()) == [0x0c, 0x05, 0x68, 0x65, 0x6c, 0x6c, 0x6f]
                 expect("thérè".toDER()) == [0x0C, 0x07, 0x74, 0x68, 0xC3, 0xA9, 0x72, 0xC3, 0xA8]
             }
+            
+            it("can encode dates") {
+                expect(NSDate(timeIntervalSinceReferenceDate: 265336576).toDER()) == [0x18, 0x0F] + [UInt8]("20090530003616Z".utf8)
+            }
         }
         
         describe("Leading zeros") {
