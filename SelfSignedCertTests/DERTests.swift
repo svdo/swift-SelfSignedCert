@@ -39,6 +39,29 @@ class DERTests : QuickSpec {
             it("can encode dates") {
                 expect(NSDate(timeIntervalSinceReferenceDate: 265336576).toDER()) == [0x18, 0x0F] + [UInt8]("20090530003616Z".utf8)
             }
+            
+            it("can encode simple sequence") {
+                let sequence = DERSequence { 72.toDER() + true.toDER() }
+                expect(sequence.toDER()) == [0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF]
+                
+                let sequence2 = DERSequence { 42.toDER() + "hello world".toDER() + false.toDER() }
+                var out = ""
+                for b in sequence2.toDER() {
+                    out += String(format: "%.2X", b)
+                }
+                print(out)
+                expect(sequence2.toDER()) == [0x30, 0x13, 0x02, 0x01, 0x2A, 0x0C, 0x0B, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x01, 0x01, 0x00]
+            }
+            
+            it("can encode nested sequence") {
+                let sequence = DERSequence {
+                    DERSequence { 72.toDER() + true.toDER() }.toDER() +
+                    DERSequence { 72.toDER() + true.toDER() }.toDER()
+                }
+                expect(sequence.toDER()) == [0x30, 0x10,
+                                             0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF,
+                                             0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF]
+            }
         }
         
         describe("Leading zeros") {

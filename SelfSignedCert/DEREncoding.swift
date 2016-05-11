@@ -96,6 +96,13 @@ extension NSDate {
     }
 }
 
+struct DERSequence {
+    let contentsGenerator:()->[UInt8]
+    func toDER() -> [UInt8] {
+        return writeDER(tag: 16, constructed: true, bytes: contentsGenerator())
+    }
+}
+
 func writeDER(tag tag:UInt8, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
     let constructedBits : UInt8 = (constructed ? 1 : 0) << 5
     let classBits : UInt8 = 0
