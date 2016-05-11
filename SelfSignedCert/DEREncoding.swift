@@ -29,7 +29,6 @@ extension IntegerType {
             let bitPattern = ~(-self.toIntMax()) + 1
             let twosComplement = UInt64(bitPattern:bitPattern)
             let bytes : [UInt8] = SwiftBytes.bytes(twosComplement).ensureSingleLeadingOneBit()
-            //[ UInt8(self.toIntMax() & 0x000000FF) ]
             return writeDER(tag: 2, constructed: false, bytes: bytes)
         }
     }
