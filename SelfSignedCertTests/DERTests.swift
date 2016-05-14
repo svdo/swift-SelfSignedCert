@@ -11,6 +11,10 @@ class DERTests : QuickSpec {
     override func spec() {
         
         describe("DER encoding") {
+            it("can encode NULL") {
+                expect(NSNull().toDER()) == [0x05, 0x00]
+            }
+            
             it("can encode booleans") {
                 expect(true.toDER()) == [0x01,0x01,0xFF]
                 expect(false.toDER()) == [0x01,0x01,0x00]
@@ -32,6 +36,7 @@ class DERTests : QuickSpec {
             }
             
             it("can encode strings") {
+                expect("".toDER()) == [0x0c, 0x00]
                 expect("hello".toDER()) == [0x0c, 0x05, 0x68, 0x65, 0x6c, 0x6c, 0x6f]
                 expect("thérè".toDER()) == [0x0C, 0x07, 0x74, 0x68, 0xC3, 0xA9, 0x72, 0xC3, 0xA8]
             }

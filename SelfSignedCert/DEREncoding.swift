@@ -3,6 +3,12 @@
 import Foundation
 import SwiftBytes
 
+extension NSNull {
+    func toDER() -> [UInt8] {
+        return writeDER(tag: 5, constructed: false, bytes: [])
+    }
+}
+
 extension Bool {
     func toDER() -> [UInt8] {
         let value : UInt8 = self ? 0xFF : 0x00
