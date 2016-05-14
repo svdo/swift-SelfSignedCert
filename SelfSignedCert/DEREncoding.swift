@@ -11,12 +11,15 @@ extension Bool {
 }
 
 extension UnsignedIntegerType {
-    func toDER() -> [UInt8] {
+    func encodeForDER() -> [UInt8] {
         var bytes : [UInt8] = SwiftBytes.bytes(self.toUIntMax()).removeLeadingZeros()
         if (bytes[0] & 0x80) == 0x80 {
             bytes = [0x00] + bytes
         }
-        return writeDER(tag: 2, constructed: false, bytes: bytes)
+        return bytes
+    }
+    func toDER() -> [UInt8] {
+        return writeDER(tag: 2, constructed: false, bytes: self.encodeForDER())
     }
 }
 
@@ -95,6 +98,33 @@ extension NSDate {
     }
 }
 
+extension OID {
+    func toDER() -> [UInt8] {
+        var bytes = [UInt8]()
+        var index = 0
+        if (components.count >= 2 && components[0] <= 3 && components[1] < 40) {
+            bytes.append(UInt8(components[0]) * 40 + UInt8(components[1]))
+            index = 2
+        }
+        while index < components.count {
+            var nonZeroAdded = false
+            let component = components[index]
+            for shift in 28.stride(through: 0, by: -7) {
+                let byte = UInt8((component >> UInt32(shift)) & 0x7F)
+                if (byte != 0 || nonZeroAdded) {
+                    if (nonZeroAdded) {
+                        bytes[bytes.count-1] |= 0x80
+                    }
+                    bytes.append(byte)
+                    nonZeroAdded = true
+                }
+            }
+            index = index + 1
+        }
+        return bytes
+    }
+}
+
 struct DERSequence {
     let contentsGenerator:()->[UInt8]
     func toDER() -> [UInt8] {
@@ -106,7 +136,16 @@ func writeDER(tag tag:UInt8, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
     let constructedBits : UInt8 = (constructed ? 1 : 0) << 5
     let classBits : UInt8 = 0
     let headerByte1 : UInt8 = tag | constructedBits | classBits
-    let lengthBits : UInt8 = UInt8(bytes.count)
-    let headerByte2 : UInt8 = lengthBits
-    return [headerByte1, headerByte2] + bytes
+    
+    var headerByte2 : UInt8 = 0
+    var headerExtraLength = [UInt8]()
+    if bytes.count < 128 {
+        headerByte2 = UInt8(bytes.count)
+    }
+    else {
+        let l = UInt64(bytes.count)
+        headerExtraLength = l.encodeForDER()
+        headerByte2 = UInt8(headerExtraLength.count) | 0x80
+    }
+    return [headerByte1] + [headerByte2] + headerExtraLength + bytes
 }

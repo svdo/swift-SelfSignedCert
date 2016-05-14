@@ -19,6 +19,7 @@
 		F8B8C5711CDCDE0F00FC4174 /* CertificateRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */; };
 		F8B8C5771CDCF42800FC4174 /* DERTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5761CDCF42800FC4174 /* DERTests.swift */; };
 		F8B8C5791CDE2CFB00FC4174 /* DEREncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */; };
+		F8B8C57D1CE4DBA700FC4174 /* OID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C57C1CE4DBA700FC4174 /* OID.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateRequestTests.swift; sourceTree = "<group>"; };
 		F8B8C5761CDCF42800FC4174 /* DERTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DERTests.swift; sourceTree = "<group>"; };
 		F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DEREncoding.swift; sourceTree = "<group>"; };
+		F8B8C57C1CE4DBA700FC4174 /* OID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OID.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */,
 				F8B8C56C1CDBDBBE00FC4174 /* CertificateRequest.swift */,
 				F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */,
+				F8B8C57C1CE4DBA700FC4174 /* OID.swift */,
 			);
 			path = SelfSignedCert;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				F8B8C56D1CDBDBBE00FC4174 /* CertificateRequest.swift in Sources */,
 				F8B8C5791CDE2CFB00FC4174 /* DEREncoding.swift in Sources */,
 				F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */,
+				F8B8C57D1CE4DBA700FC4174 /* OID.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
