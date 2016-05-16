@@ -43,7 +43,7 @@ extension IntegerType {
     }
 }
 
-extension SequenceType where Generator.Element:IntegerType {
+extension SequenceType where Generator.Element : IntegerType {
     func removeLeading(number:Generator.Element) -> [Generator.Element] {
         if self.minElement() == nil { return [] }
         var nonNumberFound = false
@@ -67,7 +67,6 @@ extension SequenceType where Generator.Element:IntegerType {
         else {
             return removedZeros
         }
-        
     }
     
     func ensureSingleLeadingOneBit() -> [Generator.Element] {
@@ -84,9 +83,33 @@ extension SequenceType where Generator.Element:IntegerType {
 }
 
 extension String {
+    
+    private static let notPrintableCharSet : NSMutableCharacterSet = {
+        let charset = NSMutableCharacterSet(charactersInString:" '()+,-./:=?")
+        charset.formUnionWithCharacterSet(NSCharacterSet.alphanumericCharacterSet());
+        charset.invert();
+        return charset;
+    }()
+    
     func toDER() -> [UInt8] {
-        let utf8Bytes = [UInt8](self.utf8)
-        return writeDER(tag: 12, constructed: false, bytes: utf8Bytes)
+        if let asciiData = self.dataUsingEncoding(NSASCIIStringEncoding) {
+            var tag:UInt8 = 19; // printablestring (a silly arbitrary subset of ASCII defined by ASN.1)
+            if let range = self.rangeOfCharacterFromSet(String.notPrintableCharSet) where /*!forcePrintableStrings && */range.endIndex > range.startIndex {
+                tag = 20 // IA5string (full 7-bit ASCII)
+            }
+            return writeDER(tag: tag, tagClass: 0, constructed: false, bytes: asciiData.bytes)
+        } else {
+            let utf8Bytes = [UInt8](self.utf8)
+            return writeDER(tag: 12, constructed: false, bytes: utf8Bytes)
+        }
+    }
+}
+
+extension BitString {
+    func toDER() -> [UInt8] {
+        let bytes = writeDERHeader(tag: 3, tagClass: 0, constructed: false, length: UInt64(1+bitCount/8))
+        let unused = UInt8((8 - (bitCount % 8)) % 8)
+        return bytes + [unused] + data.bytes
     }
 }
 
@@ -138,20 +161,148 @@ struct DERSequence {
     }
 }
 
-func writeDER(tag tag:UInt8, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
+extension ASN1Object {
+    func toDER() -> [UInt8] {
+        if let comps = self.components {
+            return encodeCollection(comps, tag: self.tag, tagClass: self.tagClass)
+        }
+        else if let data = self.value {
+            return writeDER(tag: self.tag, tagClass: self.tagClass, constructed: self.constructed, bytes: data)
+        }
+        else {
+            assertionFailure("ASN1Object should have either components or value, but has neither")
+            return []
+        }
+    }
+}
+
+extension NSArray {
+    func toDER() -> [UInt8] {
+        var objects = self as? [NSObject]
+        if objects == nil {
+            var copy = Array<NSObject>()
+            for o in self {
+                copy.append(o as! NSObject)
+            }
+            objects = copy
+        }
+        guard let collection = objects else {
+            assertionFailure("Unable to endcode array")
+            return []
+        }
+        return encodeCollection(collection, tag:16, tagClass: 0)
+    }
+}
+
+extension NSSet {
+    func toDER() -> [UInt8] {
+        var objects = [NSObject]()
+        for o in self {
+            objects.append(o as! NSObject)
+        }
+        return encodeCollection(objects, tag: 17, tagClass: 0)
+    }
+}
+
+extension SequenceType where Generator.Element == NSObject {
+    
+}
+
+extension NSNumber {
+    func toDER() -> [UInt8] {
+        // Special-case detection of booleans by pointer equality, because otherwise they appear
+        // identical to 0 and 1:
+        if (self===NSNumber(bool: true) || self===NSNumber(bool: false)) {
+            let value:UInt8 = self===NSNumber(bool:true) ?0xFF :0x00;
+            return writeDER(tag: 1, constructed: false, bytes: [value])
+        }
+        
+        guard let objcType = String.fromCString(self.objCType) else {
+            assertionFailure("Could not get objcType of NSNumber")
+            return []
+        }
+        
+        if (objcType.characters.count == 1) {
+            switch(objcType) {
+            case "c", "i", "s", "l", "q":
+                return self.longLongValue.toDER()
+            case "C", "I", "S", "L", "Q":
+                return self.unsignedLongLongValue.toDER()
+            case "B":
+                return self.boolValue.toDER()
+            default:
+                assertionFailure("Cannot DER encode NSNumber of type \(objcType)")
+                return []
+            }
+        }
+        
+        assertionFailure("Cannot DER encode NSNumber of type \(objcType)")
+        return []
+    }
+}
+
+extension NSObject {
+    func toDER_manualDispatch() -> [UInt8] {
+        if let d = self as? NSDate {
+            return d.toDER()
+        }
+        else if let n = self as? NSNull {
+            return n.toDER()
+        }
+        else if let a = self as? NSArray {
+            return a.toDER()
+        }
+        else if let s = self as? NSSet {
+            return s.toDER()
+        }
+        else if let num = self as? NSNumber {
+            return num.toDER()
+        }
+        else if let str = self as? NSString {
+            return (str as String).toDER()
+        }
+        else if let asn1 = self as? ASN1Object {
+            return asn1.toDER()
+        }
+        else if let oid = self as? OID {
+            return oid.toDER()
+        }
+        else if let bitStr = self as? BitString {
+            return bitStr.toDER()
+        }
+        else {
+            assertionFailure("toDER_manualDispatch not defined for object \(self)")
+            return []
+        }
+    }
+}
+    
+private func encodeCollection(collection:[NSObject], tag:UInt8, tagClass:UInt8) -> [UInt8] {
+    var bytes = [UInt8]()
+    for o in collection {
+        bytes += o.toDER_manualDispatch()
+    }
+    return writeDER(tag: tag, tagClass: tagClass, constructed: true, bytes: bytes)
+}
+
+func writeDER(tag tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
+    return writeDERHeader(tag: tag, tagClass: tagClass, constructed: constructed, length: UInt64(bytes.count)) + bytes
+}
+
+func writeDERHeader(tag tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, length:UInt64) -> [UInt8] {
     let constructedBits : UInt8 = (constructed ? 1 : 0) << 5
-    let classBits : UInt8 = 0
+    let classBits : UInt8 = tagClass << 6
     let headerByte1 : UInt8 = tag | constructedBits | classBits
     
     var headerByte2 : UInt8 = 0
     var headerExtraLength = [UInt8]()
-    if bytes.count < 128 {
-        headerByte2 = UInt8(bytes.count)
+    if length < 128 {
+        headerByte2 = UInt8(length)
     }
     else {
-        let l = UInt64(bytes.count)
+        let l = UInt64(length)
         headerExtraLength = l.encodeForDER()
         headerByte2 = UInt8(headerExtraLength.count) | 0x80
     }
-    return [headerByte1] + [headerByte2] + headerExtraLength + bytes
+    return [headerByte1] + [headerByte2] + headerExtraLength
 }

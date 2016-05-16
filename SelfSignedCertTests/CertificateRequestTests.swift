@@ -40,6 +40,33 @@ class CertificateRequestTests: QuickSpec {
             }.toNot(throwError())
         }
         
+        it("can be DER encoded") {
+            let dc = NSDateComponents()
+            dc.year = 2016
+            dc.month = 5
+            dc.day = 14
+            dc.hour = 16
+            dc.minute = 32
+            dc.second = 0
+            dc.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+            let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+            let validFrom = calendar!.dateFromComponents(dc)
+            dc.year = 2017
+            let validTo = calendar!.dateFromComponents(dc)
+            var certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:validFrom, validTo:validTo, serialNumber:484929458750)
+            certReq.publicKeyDerEncoder = { pubKey in
+                let pubKeyPath = NSBundle(forClass: self.classForCoder).pathForResource("pubkey", ofType: "bin")
+                return NSData(contentsOfFile: pubKeyPath!)!
+            }
+            
+            let certDataPath = NSBundle(forClass: self.classForCoder).pathForResource("certdata", ofType: "der")
+            let expectedEncoded = NSData(contentsOfFile: certDataPath!)!.bytes
+            
+            let encoded = certReq.toDER()
+            expect(encoded) == expectedEncoded
+        }
+        
+        
 //        it("Can sign") {
 //            expect { Void->Void in
 //                let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
