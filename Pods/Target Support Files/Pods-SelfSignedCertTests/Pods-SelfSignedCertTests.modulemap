@@ -1,6 +1,0 @@
-framework module Pods_SelfSignedCertTests {
-  umbrella header "Pods-SelfSignedCertTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

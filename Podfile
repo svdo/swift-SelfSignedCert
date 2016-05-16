@@ -8,7 +8,6 @@ target 'SelfSignedCert' do
     pod 'SwiftBytes', '~> 0.2'
 
   target 'SelfSignedCertTests' do
-    inherit! :search_paths
     pod 'Quick', '~> 0.9'
     pod 'Nimble', '~> 4.0'
   end
