@@ -10,4 +10,9 @@ class BitString : NSObject {
         self.data = data
         bitCount = UInt(data.length) * 8
     }
+    
+    override var description: String {
+        return "\(self.dynamicType)\(data)"
+    }
+    
 }

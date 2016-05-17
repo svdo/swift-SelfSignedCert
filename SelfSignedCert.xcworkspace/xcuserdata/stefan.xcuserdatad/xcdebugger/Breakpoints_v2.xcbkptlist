@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SelfSignedCert/CertificateRequest.swift"
-            timestampString = "485105782.145598"
+            timestampString = "485177327.977938"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
             landmarkName = "toDER()"
             landmarkType = "5">
          </BreakpointContent>

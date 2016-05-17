@@ -15,6 +15,7 @@ class OID : NSObject {
         }
         return components == other.components
     }
+    
     override var hashValue: Int {
         var hash : Int = 0
         for i in components {
@@ -23,6 +24,13 @@ class OID : NSObject {
         return hash
     }
 
+    override var description: String {
+        var desc = "{"
+        for c in components {
+            desc += String(format: "%u ", c)
+        }
+        return desc + "}"
+    }
 }
 
 extension OID {
@@ -43,7 +51,7 @@ extension OID {
     
     /** USAGE **/
     //    static let basicConstraintsOID = OID(components:[2, 5, 29, 19])
-    //    static let keyUsageOID = OID(components:[2, 5, 29, 15])
+    @nonobjc static let keyUsageOID = OID(components:[2, 5, 29, 15])
     //    static let extendedKeyUsageOID = OID(components:[2, 5, 29, 37])
 
     /** EXTENSIONS **/

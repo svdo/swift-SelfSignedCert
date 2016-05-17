@@ -40,6 +40,23 @@ class CertificateRequestTests: QuickSpec {
             }.toNot(throwError())
         }
         
+        describe("key usage") {
+            it("is stored correctly in extensions") {
+                expect { Void->Void in
+                    let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
+                    let extensions = certReq.extensions()
+                    expect(extensions.count) == 1
+                    let ext = extensions[0]
+                    expect(ext[0] as? OID) == OID.keyUsageOID
+                    expect(ext[1] as? NSNumber) == NSNumber(bool: true)
+                    let bitsData = ext[2] as! NSData
+                    let bytes = bitsData.bytes
+                    expect(bytes.count) == 4
+                    expect(UInt16(bytes[3])) == KeyUsage.DigitalSignature.rawValue | KeyUsage.DataEncipherment.rawValue
+                }.toNot(throwError())
+            }
+        }
+        
         it("can be DER encoded") {
             let dc = NSDateComponents()
             dc.year = 2016
@@ -63,9 +80,9 @@ class CertificateRequestTests: QuickSpec {
             let expectedEncoded = NSData(contentsOfFile: certDataPath!)!.bytes
             
             let encoded = certReq.toDER()
+            print(dumpData(encoded, prefix:"", separator:""))
             expect(encoded) == expectedEncoded
         }
-        
         
 //        it("Can sign") {
 //            expect { Void->Void in
@@ -78,4 +95,15 @@ class CertificateRequestTests: QuickSpec {
 //        }
         
     }
+}
+
+private func dumpData(data:[UInt8], prefix:String = "0x", separator:String = " ") -> String {
+    var str = ""
+    for b in data {
+        if str.characters.count > 0 {
+            str += separator
+        }
+        str += prefix + String(format: "%.2x", b)
+    }
+    return str
 }

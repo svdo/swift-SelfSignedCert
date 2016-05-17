@@ -127,6 +127,12 @@ extension NSDate {
     }
 }
 
+extension NSData {
+    func toDER() -> [UInt8] {
+        return writeDER(tag: 4, tagClass: 0, constructed: false, bytes: self.bytes)
+    }
+}
+
 extension OID {
     func toDER() -> [UInt8] {
         var bytes = [UInt8]()
@@ -150,7 +156,7 @@ extension OID {
             }
             index = index + 1
         }
-        return bytes
+        return writeDER(tag: 6, tagClass: 0, constructed:  false, bytes: bytes)
     }
 }
 
@@ -244,31 +250,64 @@ extension NSNumber {
 extension NSObject {
     func toDER_manualDispatch() -> [UInt8] {
         if let d = self as? NSDate {
-            return d.toDER()
+            print("Date to DER: \(d)")
+            let bytes = d.toDER()
+            print("Date to DER: \(d) -> \(bytes)")
+            return bytes
         }
         else if let n = self as? NSNull {
-            return n.toDER()
+            print("NULL to DER")
+            let bytes = n.toDER()
+            print("NULL to DER -> bytes")
+            return bytes
         }
         else if let a = self as? NSArray {
-            return a.toDER()
+            print("Array to DER {")
+            let bytes = a.toDER()
+            print("} -> \(bytes)")
+            return bytes
         }
         else if let s = self as? NSSet {
-            return s.toDER()
+            print("Set to DER <")
+            let bytes = s.toDER()
+            print("> -> \(bytes)")
+            return bytes
         }
         else if let num = self as? NSNumber {
-            return num.toDER()
+            print("Number to DER: \(num)")
+            let bytes = num.toDER()
+            print("Number to DER: \(num) -> \(bytes)")
+            return bytes
         }
         else if let str = self as? NSString {
-            return (str as String).toDER()
+            print("String to DER: \(str)")
+            let bytes = (str as String).toDER()
+            print("String to DER: \(str) -> \(bytes)")
+            return bytes
         }
         else if let asn1 = self as? ASN1Object {
-            return asn1.toDER()
+            print("ASN1Object to DER: \(asn1)")
+            let bytes = asn1.toDER()
+            print("ASN1Object to DER: \(asn1) -> \(bytes)")
+            return bytes
         }
         else if let oid = self as? OID {
-            return oid.toDER()
+            print("OID to DER: \(oid)")
+            let bytes = oid.toDER()
+            print("OID to DER: \(oid) -> \(bytes)")
+            return bytes
         }
         else if let bitStr = self as? BitString {
-            return bitStr.toDER()
+            print("Bitstring to DER: \(bitStr)")
+            let bytes = bitStr.toDER()
+            print("Bitstring to DER: \(bitStr) -> \(bytes)")
+            return bytes
+        }
+        else if let data = self as? NSData {
+            print("Data to DER: \(data)")
+            let bytes = data.toDER()
+            print("Data to DER: \(data) -> \(bytes)")
+            return bytes
         }
         else {
             assertionFailure("toDER_manualDispatch not defined for object \(self)")

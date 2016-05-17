@@ -83,31 +83,31 @@ class DERTests : QuickSpec {
             
             describe("OID") {
                 it("can encode empty OID") {
-                    expect(OID(components:[]).toDER()) == []
+                    expect(OID(components:[]).toDER()) == [0x06, 0x00]
                 }
                 
                 it("collapses first two bytes if required") {
-                    expect(OID(components:[0,2]).toDER()) == [0x02]
-                    expect(OID(components:[1,2]).toDER()) == [0x2a]
-                    expect(OID(components:[2,3]).toDER()) == [0x53]
-                    expect(OID(components:[4,1]).toDER()) != [0xA1]
-                    expect(OID(components:[1,42]).toDER()) != [0x52]
+                    expect(OID(components:[0,2]).toDER()) == [0x06, 0x01, 0x02]
+                    expect(OID(components:[1,2]).toDER()) == [0x06, 0x01, 0x2a]
+                    expect(OID(components:[2,3]).toDER()) == [0x06, 0x01, 0x53]
+                    expect(OID(components:[4,1]).toDER()) != [0x06, 0x01, 0xA1]
+                    expect(OID(components:[1,42]).toDER()) != [0x06, 0x01, 0x52]
                 }
                 
                 it("can encode OID 1") {
                     let oidComponents : [UInt32] = [1,2,840,113549,1,1,1]
                     let oid = OID(components:oidComponents)
-                    expect(oid.toDER()) == [0x2a, 0x86, 0x48, 0x86,  0xf7, 0x0d, 0x01, 0x01,  0x01]
+                    expect(oid.toDER()) == [0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,  0xf7, 0x0d, 0x01, 0x01,  0x01]
                 }
                 
                 it("can encode OID 2") {
                     let oidComponents : [UInt32] = [2,5,4,4]
                     let oid = OID(components:oidComponents)
-                    expect(oid.toDER()) == [0x55,0x04,0x04]
+                    expect(oid.toDER()) == [0x06, 0x03, 0x55, 0x04, 0x04]
                 }
                 
                 it("can encode OID 3") {
-                    expect(OID(components: [1, 2, 840, 113549, 1, 9, 1]).toDER()) == [0x2a,0x86,0x48,0x86,0xf7,0x0d,0x01,0x09,0x01]
+                    expect(OID(components: [1, 2, 840, 113549, 1, 9, 1]).toDER()) == [0x06, 0x09, 0x2a,0x86,0x48,0x86,0xf7,0x0d,0x01,0x09,0x01]
                 }
             }
             
