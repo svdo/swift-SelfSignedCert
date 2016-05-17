@@ -80,7 +80,7 @@ class CertificateRequestTests: QuickSpec {
             let expectedEncoded = NSData(contentsOfFile: certDataPath!)!.bytes
             
             let encoded = certReq.toDER()
-            print(dumpData(encoded, prefix:"", separator:""))
+//            print(dumpData(encoded, prefix:"", separator:""))
             expect(encoded) == expectedEncoded
         }
         

@@ -70,22 +70,6 @@ struct CertificateRequest {
 
 extension CertificateRequest {
     func toDER() -> [UInt8] {
-        /*
-         id empty = [NSNull null];
-         id version = [[MYASN1Object alloc] initWithTag: 0 ofClass: 2 components: @[ @(kCertRequestVersionNumber - 1) ]];
-         id extensions = [[MYASN1Object alloc] initWithTag:3 ofClass:2 components: @[$marray()]];
-         NSArray *root = $array( $marray(version,
-                                         empty,       // serial #
-                                         @[kRSAAlgorithmID],
-                                         $marray(),
-                                         $marray(empty, empty),
-                                         $marray(),
-                                         @[ @[kRSAAlgorithmID, empty],
-                                            [MYBitString bitStringWithData: publicKey.keyData]
-                                         ],
-                                         extensions) );
-
- */
         precondition(publicKeyDerEncoder != nil)
         
         let empty = NSNull()

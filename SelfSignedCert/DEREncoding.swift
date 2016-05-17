@@ -250,63 +250,63 @@ extension NSNumber {
 extension NSObject {
     func toDER_manualDispatch() -> [UInt8] {
         if let d = self as? NSDate {
-            print("Date to DER: \(d)")
+//            print("Date to DER: \(d)")
             let bytes = d.toDER()
-            print("Date to DER: \(d) -> \(bytes)")
+//            print("Date to DER: \(d) -> \(bytes)")
             return bytes
         }
         else if let n = self as? NSNull {
-            print("NULL to DER")
+//            print("NULL to DER")
             let bytes = n.toDER()
-            print("NULL to DER -> bytes")
+//            print("NULL to DER -> bytes")
             return bytes
         }
         else if let a = self as? NSArray {
-            print("Array to DER {")
+//            print("Array to DER {")
             let bytes = a.toDER()
-            print("} -> \(bytes)")
+//            print("} -> \(bytes)")
             return bytes
         }
         else if let s = self as? NSSet {
-            print("Set to DER <")
+//            print("Set to DER <")
             let bytes = s.toDER()
-            print("> -> \(bytes)")
+//            print("> -> \(bytes)")
             return bytes
         }
         else if let num = self as? NSNumber {
-            print("Number to DER: \(num)")
+//            print("Number to DER: \(num)")
             let bytes = num.toDER()
-            print("Number to DER: \(num) -> \(bytes)")
+//            print("Number to DER: \(num) -> \(bytes)")
             return bytes
         }
         else if let str = self as? NSString {
-            print("String to DER: \(str)")
+//            print("String to DER: \(str)")
             let bytes = (str as String).toDER()
-            print("String to DER: \(str) -> \(bytes)")
+//            print("String to DER: \(str) -> \(bytes)")
             return bytes
         }
         else if let asn1 = self as? ASN1Object {
-            print("ASN1Object to DER: \(asn1)")
+//            print("ASN1Object to DER: \(asn1)")
             let bytes = asn1.toDER()
-            print("ASN1Object to DER: \(asn1) -> \(bytes)")
+//            print("ASN1Object to DER: \(asn1) -> \(bytes)")
             return bytes
         }
         else if let oid = self as? OID {
-            print("OID to DER: \(oid)")
+//            print("OID to DER: \(oid)")
             let bytes = oid.toDER()
-            print("OID to DER: \(oid) -> \(bytes)")
+//            print("OID to DER: \(oid) -> \(bytes)")
             return bytes
         }
         else if let bitStr = self as? BitString {
-            print("Bitstring to DER: \(bitStr)")
+//            print("Bitstring to DER: \(bitStr)")
             let bytes = bitStr.toDER()
-            print("Bitstring to DER: \(bitStr) -> \(bytes)")
+//            print("Bitstring to DER: \(bitStr) -> \(bytes)")
             return bytes
         }
         else if let data = self as? NSData {
-            print("Data to DER: \(data)")
+//            print("Data to DER: \(data)")
             let bytes = data.toDER()
-            print("Data to DER: \(data) -> \(bytes)")
+//            print("Data to DER: \(data) -> \(bytes)")
             return bytes
         }
         else {

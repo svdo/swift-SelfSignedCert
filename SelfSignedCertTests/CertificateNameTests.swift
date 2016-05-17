@@ -39,7 +39,10 @@ class CertificateNameTests: QuickSpec {
         }
         
         xit("can replace email") {
-            // todo
+           let cn = CertificateName()
+            cn.emailAddress = "x@example.com"
+            cn.emailAddress = "y@example.com"
+            expect(cn.emailAddress) == "y@example.com"
         }
 
         context("when setting common name") {
