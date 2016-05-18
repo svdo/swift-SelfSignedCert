@@ -36,6 +36,7 @@ class CertificateRequestTests: QuickSpec {
         
         beforeSuite { ()->() in
             do {
+                // doing this in `beforeSuite` instead of `beforeEach` makes the tests run faster...
                 let (priv, pub) = try SecKey.generateKeyPair(ofSize: 2048)
                 privKey = priv
                 pubKey = pub
