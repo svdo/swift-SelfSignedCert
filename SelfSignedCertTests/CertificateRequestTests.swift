@@ -7,6 +7,28 @@ import Nimble
 
 class CertificateRequestTests: QuickSpec {
 
+    var dateComponents: NSDateComponents {
+        let dc = NSDateComponents()
+        dc.year = 2016
+        dc.month = 5
+        dc.day = 14
+        dc.hour = 16
+        dc.minute = 32
+        dc.second = 0
+        dc.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+        return dc
+    }
+    var validFrom: NSDate {
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        return calendar!.dateFromComponents(dateComponents)!
+    }
+    var validTo: NSDate {
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        let dc = dateComponents
+        dc.year = dc.year + 1
+        return calendar!.dateFromComponents(dc)!
+    }
+
     override func spec() {
 
         var privKey: SecKey!
@@ -58,19 +80,7 @@ class CertificateRequestTests: QuickSpec {
         }
         
         it("can be DER encoded") {
-            let dc = NSDateComponents()
-            dc.year = 2016
-            dc.month = 5
-            dc.day = 14
-            dc.hour = 16
-            dc.minute = 32
-            dc.second = 0
-            dc.timeZone = NSTimeZone(forSecondsFromGMT: 0)
-            let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-            let validFrom = calendar!.dateFromComponents(dc)
-            dc.year = 2017
-            let validTo = calendar!.dateFromComponents(dc)
-            var certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:validFrom, validTo:validTo, serialNumber:484929458750)
+            var certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:self.validFrom, validTo:self.validTo, serialNumber:484929458750)
             certReq.publicKeyDerEncoder = { pubKey in
                 let pubKeyPath = NSBundle(forClass: self.classForCoder).pathForResource("pubkey", ofType: "bin")
                 return NSData(contentsOfFile: pubKeyPath!)!
