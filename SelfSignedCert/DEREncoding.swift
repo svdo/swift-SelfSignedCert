@@ -109,7 +109,7 @@ extension BitString {
     func toDER() -> [UInt8] {
         let bytes = writeDERHeader(tag: 3, tagClass: 0, constructed: false, length: UInt64(1+bitCount/8))
         let unused = UInt8((8 - (bitCount % 8)) % 8)
-        return bytes + [unused] + data.bytes
+        return bytes + [unused] + data
     }
 }
 

@@ -3,12 +3,16 @@
 import Foundation
 
 class BitString : NSObject {
-    let data: NSData
+    let data: [UInt8]
     let bitCount: UInt
     
-    init(data:NSData) {
+    convenience init(data:NSData) {
+        self.init(data: data.bytes)
+    }
+    
+    init(data:[UInt8]) {
         self.data = data
-        bitCount = UInt(data.length) * 8
+        bitCount = UInt(data.count) * 8
     }
     
     override var description: String {
