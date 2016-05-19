@@ -5,7 +5,8 @@ target 'SelfSignedCert' do
 
   #pod 'Locksmith', '~> 2.0'
   #pod 'SwiftKeychain', '~> 1.0'
-    pod 'SwiftBytes', '~> 0.2'
+  pod 'IDZSwiftCommonCrypto', '~> 0.7'
+  pod 'SwiftBytes', '~> 0.2'
 
   target 'SelfSignedCertTests' do
     pod 'Quick', '~> 0.9'
