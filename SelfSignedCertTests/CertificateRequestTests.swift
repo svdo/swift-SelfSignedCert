@@ -80,11 +80,11 @@ class CertificateRequestTests: QuickSpec {
             }
         }
         
-        it("can be DER encoded") {
+        it("can be DER encoded with preserialized public key") {
             var certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:self.validFrom, validTo:self.validTo, serialNumber:484929458750)
             certReq.publicKeyDerEncoder = { pubKey in
                 let pubKeyPath = NSBundle(forClass: self.classForCoder).pathForResource("pubkey", ofType: "bin")
-                return NSData(contentsOfFile: pubKeyPath!)!
+                return NSData(contentsOfFile: pubKeyPath!)!.bytes
             }
             
             let certDataPath = NSBundle(forClass: self.classForCoder).pathForResource("certdata", ofType: "der")
@@ -94,16 +94,25 @@ class CertificateRequestTests: QuickSpec {
 //            print(dumpData(encoded, prefix:"", separator:""))
             expect(encoded) == expectedEncoded
         }
+
+        it("can be DER encoded with public key") {
+            let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:self.validFrom, validTo:self.validTo, serialNumber:484929458750)
+            let encoded = certReq.toDER()
+            expect(encoded.count) == 444 /* same as previous test */
+        }
         
-//        it("Can sign") {
-//            expect { Void->Void in
-//                let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
-//                let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
-//                let cert = try certReq.sign(withPrivateKey: privKey)
-//                // store cert in keychain
-//                // find the matching identity
-//            }.toNot(throwError())
-//        }
+        it("Can sign") {
+            expect { Void->Void in
+                let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
+                let signedData = try certReq.selfSign(withPrivateKey: privKey)
+                let signedBytes = NSData(bytes: signedData)
+                let signedCert = SecCertificateCreateWithData(nil, signedBytes)
+                expect(signedCert).toNot(beNil())
+                let subjectSummary = SecCertificateCopySubjectSummary(signedCert!)
+                expect (subjectSummary).toNot(beNil())
+                expect(subjectSummary! as String) == "Test Name"
+            }.toNot(throwError())
+        }
         
     }
 }

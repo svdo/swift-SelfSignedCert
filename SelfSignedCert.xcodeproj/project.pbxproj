@@ -11,6 +11,10 @@
 		7AC8838F8F60B54313470A18 /* Pods_SelfSignedCert_SelfSignedCertTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37F407C7648B0D1A2E0DAB42 /* Pods_SelfSignedCert_SelfSignedCertTests.framework */; };
 		A2F0CBCD4904F9ADF06A1FDB /* Pods_SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F0C830D602A573E03B1CAB8 /* Pods_SelfSignedCert.framework */; };
 		F81B16AF1CEA19FB00C1EBD8 /* OIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16AE1CEA19FB00C1EBD8 /* OIDTests.swift */; };
+		F81B16B11CEDFB6400C1EBD8 /* SecKey+KeyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16B01CEDFB6400C1EBD8 /* SecKey+KeyData.swift */; };
+		F81B16B31CEDFBBC00C1EBD8 /* SecKey+KeyDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16B21CEDFBBC00C1EBD8 /* SecKey+KeyDataTests.swift */; };
+		F81B16B51CEE07ED00C1EBD8 /* SecKey+Signing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16B41CEE07ED00C1EBD8 /* SecKey+Signing.swift */; };
+		F81B16B71CEE09E600C1EBD8 /* SecKey+SigningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16B61CEE09E600C1EBD8 /* SecKey+SigningTests.swift */; };
 		F855135C1CE772210023ADEF /* certdata.der in Resources */ = {isa = PBXBuildFile; fileRef = F855135A1CE772210023ADEF /* certdata.der */; };
 		F855135D1CE772210023ADEF /* pubkey.bin in Resources */ = {isa = PBXBuildFile; fileRef = F855135B1CE772210023ADEF /* pubkey.bin */; };
 		F855135F1CE7AC7F0023ADEF /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */; };
@@ -51,6 +55,10 @@
 		D2D2DC4E3A1856A597CD501E /* Pods-SelfSignedCert-SelfSignedCertTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCert-SelfSignedCertTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCert-SelfSignedCertTests/Pods-SelfSignedCert-SelfSignedCertTests.release.xcconfig"; sourceTree = "<group>"; };
 		EE599C5228B10DDFB28C542B /* Pods-SelfSignedCert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelfSignedCert.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelfSignedCert/Pods-SelfSignedCert.debug.xcconfig"; sourceTree = "<group>"; };
 		F81B16AE1CEA19FB00C1EBD8 /* OIDTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OIDTests.swift; sourceTree = "<group>"; };
+		F81B16B01CEDFB6400C1EBD8 /* SecKey+KeyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+KeyData.swift"; sourceTree = "<group>"; };
+		F81B16B21CEDFBBC00C1EBD8 /* SecKey+KeyDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+KeyDataTests.swift"; sourceTree = "<group>"; };
+		F81B16B41CEE07ED00C1EBD8 /* SecKey+Signing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+Signing.swift"; sourceTree = "<group>"; };
+		F81B16B61CEE09E600C1EBD8 /* SecKey+SigningTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecKey+SigningTests.swift"; sourceTree = "<group>"; };
 		F855135A1CE772210023ADEF /* certdata.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = certdata.der; sourceTree = "<group>"; };
 		F855135B1CE772210023ADEF /* pubkey.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubkey.bin; sourceTree = "<group>"; };
 		F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
@@ -145,6 +153,8 @@
 				F8B8C5531CDBCCB800FC4174 /* Info.plist */,
 				F8B8C5681CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift */,
 				F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */,
+				F81B16B01CEDFB6400C1EBD8 /* SecKey+KeyData.swift */,
+				F81B16B41CEE07ED00C1EBD8 /* SecKey+Signing.swift */,
 				F8B8C56C1CDBDBBE00FC4174 /* CertificateRequest.swift */,
 				F8CF9ECE1CEA024600702C68 /* CertificateName.swift */,
 				F8B8C5781CDE2CFB00FC4174 /* DEREncoding.swift */,
@@ -161,12 +171,14 @@
 				F855135A1CE772210023ADEF /* certdata.der */,
 				F855135B1CE772210023ADEF /* pubkey.bin */,
 				F8B8C55F1CDBCCB800FC4174 /* Info.plist */,
-				F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */,
 				F8B8C5701CDCDE0F00FC4174 /* CertificateRequestTests.swift */,
 				F8B8C5761CDCF42800FC4174 /* DERTests.swift */,
+				F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */,
 				F8B8C56E1CDCC79600FC4174 /* SecKey+KeyPairTests.swift */,
+				F81B16B21CEDFBBC00C1EBD8 /* SecKey+KeyDataTests.swift */,
 				F8CF9ED01CEA081F00702C68 /* CertificateNameTests.swift */,
 				F81B16AE1CEA19FB00C1EBD8 /* OIDTests.swift */,
+				F81B16B61CEE09E600C1EBD8 /* SecKey+SigningTests.swift */,
 			);
 			path = SelfSignedCertTests;
 			sourceTree = "<group>";
@@ -368,8 +380,10 @@
 				F8B8C56D1CDBDBBE00FC4174 /* CertificateRequest.swift in Sources */,
 				F8CF9ECD1CE8FC8700702C68 /* BitString.swift in Sources */,
 				F8B8C5791CDE2CFB00FC4174 /* DEREncoding.swift in Sources */,
+				F81B16B11CEDFB6400C1EBD8 /* SecKey+KeyData.swift in Sources */,
 				F8CF9ECF1CEA024600702C68 /* CertificateName.swift in Sources */,
 				F855135F1CE7AC7F0023ADEF /* ASN1Object.swift in Sources */,
+				F81B16B51CEE07ED00C1EBD8 /* SecKey+Signing.swift in Sources */,
 				F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */,
 				F8B8C57D1CE4DBA700FC4174 /* OID.swift in Sources */,
 			);
@@ -382,7 +396,9 @@
 				F81B16AF1CEA19FB00C1EBD8 /* OIDTests.swift in Sources */,
 				F8CF9ED11CEA081F00702C68 /* CertificateNameTests.swift in Sources */,
 				F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */,
+				F81B16B31CEDFBBC00C1EBD8 /* SecKey+KeyDataTests.swift in Sources */,
 				F8B8C5771CDCF42800FC4174 /* DERTests.swift in Sources */,
+				F81B16B71CEE09E600C1EBD8 /* SecKey+SigningTests.swift in Sources */,
 				F8B8C56F1CDCC79600FC4174 /* SecKey+KeyPairTests.swift in Sources */,
 				F8B8C5711CDCDE0F00FC4174 /* CertificateRequestTests.swift in Sources */,
 			);

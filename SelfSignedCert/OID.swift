@@ -37,7 +37,7 @@ extension OID {
     
     /** ALGORITHMS **/
     @nonobjc static let rsaAlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 1])
-    //    static let rsaWithSHA1AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 5])
+    @nonobjc static let rsaWithSHA1AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 5])
     //    static let rsaWithSHA256AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 11])
     //    static let rsaWithMD5AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 4 ])
     //    static let rsaWithMD2AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 2])

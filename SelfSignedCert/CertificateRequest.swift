@@ -30,7 +30,7 @@ struct CertificateRequest {
     var serialNumber: UInt64
     var validFrom: NSDate
     var validTo: NSDate
-    var publicKeyDerEncoder: (SecKey -> NSData)?
+    var publicKeyDerEncoder: (SecKey -> [UInt8])?
     var keyUsage: KeyUsage
     
     init(forPublicKey key:SecKey, subjectCommonName:String, subjectEmailAddress:String, keyUsage:KeyUsage,
@@ -58,34 +58,48 @@ struct CertificateRequest {
             self.serialNumber = UInt64(CFAbsoluteTimeGetCurrent() * 1000)
         }
         self.keyUsage = keyUsage
+        
+        publicKeyDerEncoder = encodePublicKey
     }
     
-    func sign(withPrivateKey key:SecKey) throws -> SecCertificate {
-        // data = DER encoded self
-        // key.sign(data) -> signedData
-        // SecCertificateCreateWithData(signedData) -> SecCertificate
-        throw NSError(domain:"xx", code: 1, userInfo: nil)
+    func encodePublicKey(key:SecKey) -> [UInt8] {
+        return key.keyData
+    }
+    
+    func selfSign(withPrivateKey key:SecKey) throws -> [UInt8] {
+        let info = self.info(usingSubjectAsIssuer:true)
+        
+        let dataToSign = info.toDER()
+        let signedData = key.sign(data:dataToSign)
+        let signature = BitString(data: NSData(bytes:signedData))
+        
+        let signedInfo: NSArray = [ info, [OID.rsaWithSHA1AlgorithmID, NSNull()], signature]
+        return signedInfo.toDER()
     }
 }
 
 extension CertificateRequest {
-    func toDER() -> [UInt8] {
+    func info(usingSubjectAsIssuer usingSubjectAsIssuer: Bool = false) -> NSArray {
         precondition(publicKeyDerEncoder != nil)
         
         let empty = NSNull()
         let version = ASN1Object(tag:0, tagClass:2, components:[3/*kCertRequestVersionNumber*/-1])
-        let encodedPubKey = publicKeyDerEncoder!(publicKey)
+        let encodedPubKey = NSData(bytes:publicKeyDerEncoder!(publicKey))
         let pubKeyBitStringArray : NSArray = [ [OID.rsaAlgorithmID, empty], BitString(data:encodedPubKey) ]
         let subject = CertificateName()
         subject.commonName = subjectCommonName
         subject.emailAddress = subjectEmailAddress
         let ext = ASN1Object(tag: 3, tagClass: 2, components: [extensions()])
+        let subjectComponents = subject.components
         let info : NSArray = [
-                version, NSNumber(unsignedLongLong:serialNumber), [ OID.rsaAlgorithmID ], [], [validFrom, validTo], subject.components
-                , pubKeyBitStringArray, ext
-            ]
-        
-        return info.toDER()
+            version, NSNumber(unsignedLongLong:serialNumber), [ OID.rsaAlgorithmID ], usingSubjectAsIssuer ? subjectComponents : [], [validFrom, validTo],
+            subjectComponents, pubKeyBitStringArray, ext
+        ]
+        return info
+    }
+    
+    func toDER() -> [UInt8] {
+        return info().toDER()
     }
     
     func extensions() -> [NSArray] {
