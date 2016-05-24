@@ -18,6 +18,7 @@
 		F855135D1CE772210023ADEF /* pubkey.bin in Resources */ = {isa = PBXBuildFile; fileRef = F855135B1CE772210023ADEF /* pubkey.bin */; };
 		F855135F1CE7AC7F0023ADEF /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */; };
 		F86D2E001CF48D170036B444 /* SecCertificate+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */; };
+		F86D2E031CF4A7600036B444 /* SecIdentity+PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86D2E021CF4A7600036B444 /* SecIdentity+PrivateKey.swift */; };
 		F8B8C5521CDBCCB800FC4174 /* SelfSignedCert.h in Headers */ = {isa = PBXBuildFile; fileRef = F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F8B8C5591CDBCCB800FC4174 /* SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */; };
 		F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */; };
@@ -59,6 +60,7 @@
 		F855135B1CE772210023ADEF /* pubkey.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubkey.bin; sourceTree = "<group>"; };
 		F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
 		F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecCertificate+Keychain.swift"; sourceTree = "<group>"; };
+		F86D2E021CF4A7600036B444 /* SecIdentity+PrivateKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecIdentity+PrivateKey.swift"; sourceTree = "<group>"; };
 		F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SelfSignedCert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfSignedCert.h; sourceTree = "<group>"; };
 		F8B8C5531CDBCCB800FC4174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +122,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F86D2E011CF4A4210036B444 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				F8B8C5531CDBCCB800FC4174 /* Info.plist */,
+				F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */,
+			);
+			name = "Supporting files";
+			sourceTree = "<group>";
+		};
 		F8B8C5441CDBCCB800FC4174 = {
 			isa = PBXGroup;
 			children = (
@@ -143,9 +154,8 @@
 		F8B8C5501CDBCCB800FC4174 /* SelfSignedCert */ = {
 			isa = PBXGroup;
 			children = (
-				F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */,
-				F8B8C5531CDBCCB800FC4174 /* Info.plist */,
 				F8B8C5681CDBD32A00FC4174 /* SecIdentity+SelfSigned.swift */,
+				F86D2E021CF4A7600036B444 /* SecIdentity+PrivateKey.swift */,
 				F8B8C56A1CDBD95300FC4174 /* SecKey+KeyPair.swift */,
 				F81B16B01CEDFB6400C1EBD8 /* SecKey+KeyData.swift */,
 				F81B16B41CEE07ED00C1EBD8 /* SecKey+Signing.swift */,
@@ -156,6 +166,7 @@
 				F8CF9ECC1CE8FC8700702C68 /* BitString.swift */,
 				F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */,
 				F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */,
+				F86D2E011CF4A4210036B444 /* Supporting files */,
 			);
 			path = SelfSignedCert;
 			sourceTree = "<group>";
@@ -382,6 +393,7 @@
 				F86D2E001CF48D170036B444 /* SecCertificate+Keychain.swift in Sources */,
 				F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */,
 				F8B8C57D1CE4DBA700FC4174 /* OID.swift in Sources */,
+				F86D2E031CF4A7600036B444 /* SecIdentity+PrivateKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
