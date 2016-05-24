@@ -17,6 +17,7 @@
 		F855135C1CE772210023ADEF /* certdata.der in Resources */ = {isa = PBXBuildFile; fileRef = F855135A1CE772210023ADEF /* certdata.der */; };
 		F855135D1CE772210023ADEF /* pubkey.bin in Resources */ = {isa = PBXBuildFile; fileRef = F855135B1CE772210023ADEF /* pubkey.bin */; };
 		F855135F1CE7AC7F0023ADEF /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */; };
+		F86D2E001CF48D170036B444 /* SecCertificate+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */; };
 		F8B8C5521CDBCCB800FC4174 /* SelfSignedCert.h in Headers */ = {isa = PBXBuildFile; fileRef = F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F8B8C5591CDBCCB800FC4174 /* SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */; };
 		F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */; };
@@ -57,6 +58,7 @@
 		F855135A1CE772210023ADEF /* certdata.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = certdata.der; sourceTree = "<group>"; };
 		F855135B1CE772210023ADEF /* pubkey.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubkey.bin; sourceTree = "<group>"; };
 		F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
+		F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SecCertificate+Keychain.swift"; sourceTree = "<group>"; };
 		F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SelfSignedCert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfSignedCert.h; sourceTree = "<group>"; };
 		F8B8C5531CDBCCB800FC4174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				F8B8C57C1CE4DBA700FC4174 /* OID.swift */,
 				F8CF9ECC1CE8FC8700702C68 /* BitString.swift */,
 				F855135E1CE7AC7F0023ADEF /* ASN1Object.swift */,
+				F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */,
 			);
 			path = SelfSignedCert;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				F8CF9ECF1CEA024600702C68 /* CertificateName.swift in Sources */,
 				F855135F1CE7AC7F0023ADEF /* ASN1Object.swift in Sources */,
 				F81B16B51CEE07ED00C1EBD8 /* SecKey+Signing.swift in Sources */,
+				F86D2E001CF48D170036B444 /* SecCertificate+Keychain.swift in Sources */,
 				F8B8C56B1CDBD95300FC4174 /* SecKey+KeyPair.swift in Sources */,
 				F8B8C57D1CE4DBA700FC4174 /* OID.swift in Sources */,
 			);
