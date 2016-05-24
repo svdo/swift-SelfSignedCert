@@ -32,14 +32,12 @@ class CertificateRequestTests: QuickSpec {
 
     override func spec() {
 
-        var privKey: SecKey!
         var pubKey: SecKey!
         
         beforeSuite { ()->() in
             do {
                 // doing this in `beforeSuite` instead of `beforeEach` makes the tests run faster...
-                let (priv, pub) = try SecKey.generateKeyPair(ofSize: 2048)
-                privKey = priv
+                let (_, pub) = try SecKey.generateKeyPair(ofSize: 2048)
                 pubKey = pub
             }
             catch {}
@@ -114,49 +112,52 @@ class CertificateRequestTests: QuickSpec {
                 expect(subjectSummary).toNot(beNil())
                 expect(subjectSummary! as String) == "Test Name"
 
-                let identity = SecIdentity.findAll(withPublicKey:pubKey)
+                /*
+                 * The remainder of this test shows how the keychain is used to retrieve the SecIdentity that belongs to the signed certificate.
+                 * This is not very well documented, and there was some trial and error involved, so let's make sure that this keeps working
+                 * the way we expect it to.
+                 */
+                
+                /* the identity is not available yet */
+                var identity = SecIdentity.findFirst(withPublicKey:pubKey)
                 expect(identity).to(beNil())
                 
                 /* store in keychain */
-                let dict : [String:AnyObject] = [kSecClass as String: kSecClassCertificate as String,
+                let dict : [String:AnyObject] = [
+                    kSecClass as String: kSecClassCertificate as String,
                     kSecValueRef as String : signedCert!]
                 let osresult = SecItemAdd(dict, nil)
                 expect(osresult) == errSecSuccess
                 
-                /* retrieve */
-//                identity = SecIdentity.findFirst(withPublicKeyDigest: digest)
-//                expect(identity).toNot(beNil())
-                if let identities = SecIdentity.findAll(withPublicKey:pubKey) {
-                    let identity = identities[0]
-//                    for identity in identities {
-                        print("********* IDENTITY: \(identity)")
-                        CFShow(SecIdentityGetTypeID())
-                        /* verify */
-                        var identityPrivateKey : SecKey?
-                        expect(SecIdentityCopyPrivateKey(identity, &identityPrivateKey)) == errSecSuccess
-                    
-                        expect(identityPrivateKey!.keyData) == privKey.keyData
-                    
-                        var identityCertificate : SecCertificate?
-                        expect(SecIdentityCopyCertificate(identity, &identityCertificate)) == errSecSuccess
-                        let identityCertificateData : NSData = SecCertificateCopyData(identityCertificate!)
-                        let expectedCertificateData : NSData = SecCertificateCopyData(signedCert!)
-                        expect(identityCertificateData.bytes) == expectedCertificateData.bytes
-                        
-                        var trust:SecTrust?
-                        let policy = SecPolicyCreateBasicX509();
-                        expect(SecTrustCreateWithCertificates(identityCertificate!, policy, &trust)) == errSecSuccess
-                        let identityCertificatePublicKey = SecTrustCopyPublicKey(trust!)
-                        expect(identityCertificatePublicKey!.keyData) == pubKey.keyData
-                        
-                        let signedBytes2 = try certReq.selfSign(withPrivateKey: identityPrivateKey!)
-                        expect(signedBytes) == signedBytes2
-//                    }
-                }
+                /* now we can retrieve the identity */
+                identity = SecIdentity.findFirst(withPublicKey:pubKey)
+                expect(identity).toNot(beNil())
+
+                /* verify: same private key */
+                var identityPrivateKey : SecKey?
+                expect(SecIdentityCopyPrivateKey(identity!, &identityPrivateKey)) == errSecSuccess
+                expect(identityPrivateKey!.keyData) == privKey.keyData
                 
+                /* verify: same certificate */
+                var identityCertificate : SecCertificate?
+                expect(SecIdentityCopyCertificate(identity!, &identityCertificate)) == errSecSuccess
+                let identityCertificateData : NSData = SecCertificateCopyData(identityCertificate!)
+                let expectedCertificateData : NSData = SecCertificateCopyData(signedCert!)
+                expect(identityCertificateData.bytes) == expectedCertificateData.bytes
+                
+                /* verify: same public key */
+                var trust:SecTrust?
+                let policy = SecPolicyCreateBasicX509();
+                expect(SecTrustCreateWithCertificates(identityCertificate!, policy, &trust)) == errSecSuccess
+                let identityCertificatePublicKey = SecTrustCopyPublicKey(trust!)
+                expect(identityCertificatePublicKey!.keyData) == pubKey.keyData
+                
+                /* verify: signing with retrieved key gives same result */
+                let signedBytes2 = try certReq.selfSign(withPrivateKey: identityPrivateKey!)
+                expect(signedBytes) == signedBytes2
             }.toNot(throwError())
         }
-        
+    
     }
 }
 

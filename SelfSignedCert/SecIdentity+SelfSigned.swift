@@ -21,18 +21,26 @@ extension SecIdentity
     }
     
     private static func findIdentity(forPrivateKey privKey:SecKey, publicKey pubKey:SecKey) -> SecIdentity? {
-        guard let identities = SecIdentity.findAll(withPublicKey:pubKey) else {
+        guard let identity = SecIdentity.findFirst(withPublicKey:pubKey) else {
             return nil
         }
         
-        for identity in identities {
-            if let priv = identity.privateKey where priv.keyData == privKey.keyData {
-                return identity
-            }
+        // Since the way identities are stored in the keychain is sparsely documented at best,
+        // double-check that this identity is the one we're looking for.
+        guard let priv = identity.privateKey where priv.keyData == privKey.keyData else {
+            return nil
         }
-        return nil
+        
+        return identity
     }
     
+    static func findFirst(withPublicKey pubKey:SecKey) -> SecIdentity? {
+        guard let identities = findAll(withPublicKey: pubKey) where identities.count > 0 else {
+            return nil
+        }
+        return identities[0]
+    }
+
     static func findAll(withPublicKey pubKey:SecKey) -> [SecIdentity]? {
         let sha1 = Digest(algorithm: .SHA1)
         sha1.update(pubKey.keyData)
