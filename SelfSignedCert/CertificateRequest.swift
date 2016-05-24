@@ -66,7 +66,7 @@ struct CertificateRequest {
         return key.keyData
     }
     
-    func selfSign(withPrivateKey key:SecKey) throws -> [UInt8] {
+    func selfSign(withPrivateKey key:SecKey) -> [UInt8] {
         let info = self.info(usingSubjectAsIssuer:true)
         
         let dataToSign = info.toDER()

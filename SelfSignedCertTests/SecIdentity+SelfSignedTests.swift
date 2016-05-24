@@ -9,10 +9,7 @@ class SelfSignedCertTests: QuickSpec {
     override func spec() {
 
         it("Can create a self-signed identity") {
-            var identity : SecIdentity?
-            expect {
-                identity = try SecIdentity.create()
-            }.toNot(throwError())
+            let identity = SecIdentity.create(subjectCommonName: "test", subjectEmailAddress: "test@example.com")
             expect(identity).toNot(beNil())
         }
 

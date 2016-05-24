@@ -5,7 +5,14 @@ import Security
 
 extension SecKey {
 
-    static func generateKeyPair(ofSize bits:UInt) throws -> (privateKey:SecKey, publicKey:SecKey) {
+    /**
+     * Generates an RSA private-public key pair. Wraps `SecKeyGeneratePair()`.
+     *
+     * - parameter ofSize: the size of the keys in bits
+     * - returns: The generated key pair.
+     * - throws: An `NSError` when something went wrong.
+     */
+    public static func generateKeyPair(ofSize bits:UInt) throws -> (privateKey:SecKey, publicKey:SecKey) {
         let pubKeyAttrs = [ kSecAttrIsPermanent as String: true ]
         let privKeyAttrs = [ kSecAttrIsPermanent as String: true ]
         let params: NSDictionary = [ kSecAttrKeyType as String : kSecAttrKeyTypeRSA as String,
@@ -27,7 +34,10 @@ extension SecKey {
         return (priv, pub)
     }
     
-    var blockSize: Int {
+    /**
+     * The block size of the key. Wraps `SecKeyGetBlockSize()`.
+     */
+    public var blockSize: Int {
         return SecKeyGetBlockSize(self)
     }
 }

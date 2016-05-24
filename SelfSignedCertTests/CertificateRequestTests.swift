@@ -104,7 +104,7 @@ class CertificateRequestTests: QuickSpec {
             expect { Void->Void in
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
-                let signedBytes = try certReq.selfSign(withPrivateKey: privKey)
+                let signedBytes = certReq.selfSign(withPrivateKey: privKey)
                 let signedData = NSData(bytes: signedBytes)
                 let signedCert = SecCertificateCreateWithData(nil, signedData)
                 expect(signedCert).toNot(beNil())
@@ -119,7 +119,7 @@ class CertificateRequestTests: QuickSpec {
                  */
                 
                 /* the identity is not available yet */
-                var identity = SecIdentity.findFirst(withPublicKey:pubKey)
+                var identity = SecIdentity.find(withPublicKey:pubKey)
                 expect(identity).to(beNil())
                 
                 /* store in keychain */
@@ -130,7 +130,7 @@ class CertificateRequestTests: QuickSpec {
                 expect(osresult) == errSecSuccess
                 
                 /* now we can retrieve the identity */
-                identity = SecIdentity.findFirst(withPublicKey:pubKey)
+                identity = SecIdentity.find(withPublicKey:pubKey)
                 expect(identity).toNot(beNil())
 
                 /* verify: same private key */
@@ -153,7 +153,7 @@ class CertificateRequestTests: QuickSpec {
                 expect(identityCertificatePublicKey!.keyData) == pubKey.keyData
                 
                 /* verify: signing with retrieved key gives same result */
-                let signedBytes2 = try certReq.selfSign(withPrivateKey: identityPrivateKey!)
+                let signedBytes2 = certReq.selfSign(withPrivateKey: identityPrivateKey!)
                 expect(signedBytes) == signedBytes2
             }.toNot(throwError())
         }

@@ -3,7 +3,9 @@
 import Foundation
 
 extension SecKey {
-    var keyData: [UInt8] {
+    
+    /// Provides the raw key data. Wraps `SecItemCopyMatching()`.
+    public var keyData: [UInt8] {
         let query = [ kSecValueRef as String : self, kSecReturnData as String : true ]
         var out: AnyObject?
         guard errSecSuccess == SecItemCopyMatching(query, &out) else {
@@ -14,4 +16,5 @@ extension SecKey {
         }
         return data.bytes
     }
+    
 }
