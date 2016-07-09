@@ -3,6 +3,9 @@
 import Foundation
 import Security
 
+/**
+ * Option set used for specifying key usage in certificate requests.
+ */
 struct KeyUsage : OptionSetType {
     let rawValue:  UInt16
     init(rawValue: UInt16) { self.rawValue = rawValue }
@@ -17,12 +20,15 @@ struct KeyUsage : OptionSetType {
     static let EncipherOnly       = KeyUsage(rawValue: 0x01)
     static let DecipherOnly       = KeyUsage(rawValue: 0x100)
     static let Unspecified        = KeyUsage(rawValue: 0xFFFF)        // Returned if key-usage extension is not present
-    
 }
+
 func ==(lhs: KeyUsage, rhs: KeyUsage) -> Bool {
     return lhs.rawValue == rhs.rawValue
 }
 
+/**
+ * Represents a certificate request.
+ */
 struct CertificateRequest {
     var publicKey : SecKey
     var subjectCommonName: String
@@ -66,6 +72,7 @@ struct CertificateRequest {
         return key.keyData
     }
     
+    // TODO: this returns data; should it return a certificate instead? If yes, rename to `certificateBySelfSigning`.
     func selfSign(withPrivateKey key:SecKey) -> [UInt8] {
         let info = self.info(usingSubjectAsIssuer:true)
         
