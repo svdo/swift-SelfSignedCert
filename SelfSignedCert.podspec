@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "SelfSignedCert"
   s.version      = "0.0.1"
-  s.summary      = "A Swift library to create self-signed certificates on iOS"
+  s.summary      = "A framework for iOS that allows creating self-signed certificates, implemented in Swift."
   s.description  = <<-DESC
                    On iOS, you cannot simply create self-signed certificates.
                    You could try and pull out OpenSSL, but that will turn into
