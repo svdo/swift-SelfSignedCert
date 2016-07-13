@@ -72,7 +72,6 @@ struct CertificateRequest {
         return key.keyData
     }
     
-    // TODO: this returns data; should it return a certificate instead? If yes, rename to `certificateBySelfSigning`.
     func selfSign(withPrivateKey key:SecKey) -> [UInt8] {
         let info = self.info(usingSubjectAsIssuer:true)
         

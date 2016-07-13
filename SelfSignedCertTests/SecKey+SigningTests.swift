@@ -13,7 +13,7 @@ class SecKey_SigningTests: QuickSpec {
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 512)
                 let bytes:[UInt8] = [1,2,3,4,5,6,7,8]
                 
-                let signedBytes = privKey.sign(data: bytes) // todo try pubkey instead of privkey
+                let signedBytes = privKey.sign(data: bytes)
                 expect(signedBytes.count) > bytes.count
                 
                 let sha1 = Digest(algorithm: .SHA1)
