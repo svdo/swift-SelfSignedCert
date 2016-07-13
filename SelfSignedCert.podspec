@@ -15,11 +15,11 @@ Pod::Spec.new do |s|
                    earn you LOTS and LOTS of gratitude! Please contact me.
                    DESC
 
-  s.homepage     = "https://bitbucket.org/svdoord/selfsignedcert"
+  s.homepage     = "https://github.com/svdo/swift-SelfSignedCert"
   s.license      = { :type => "MIT", :file => "LICENSE.txt" }
   s.author             = { "Stefan van den Oord" => "soord@mac.com" }
   s.platform     = :ios, "9.0"
-  s.source       = { :git => "https://bitbucket.org/svdoord/selfsignedcert", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/svdo/swift-SelfSignedCert.git", :tag => "#{s.version}" }
   s.source_files  = "SelfSignedCert/**/*.swift"
   s.dependency "IDZSwiftCommonCrypto", "~> 0.7"
   s.dependency "SwiftBytes", "~> 0.2"
