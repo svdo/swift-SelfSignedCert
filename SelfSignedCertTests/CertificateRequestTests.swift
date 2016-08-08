@@ -96,7 +96,7 @@ class CertificateRequestTests: QuickSpec {
 
         it("can be DER encoded with public key") {
             let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:self.validFrom, validTo:self.validTo, serialNumber:484929458750)
-            let encoded = certReq.toDER()
+            let encoded = certReq.toDER()!
             expect(encoded.count) == 444 /* same as previous test */
         }
         
@@ -104,7 +104,7 @@ class CertificateRequestTests: QuickSpec {
             expect { Void->Void in
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
-                let signedBytes = certReq.selfSign(withPrivateKey: privKey)
+                let signedBytes = certReq.selfSign(withPrivateKey: privKey)!
                 let signedData = NSData(bytes: signedBytes)
                 let signedCert = SecCertificateCreateWithData(nil, signedData)
                 expect(signedCert).toNot(beNil())

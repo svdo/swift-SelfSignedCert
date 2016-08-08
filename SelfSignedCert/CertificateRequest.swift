@@ -36,7 +36,7 @@ struct CertificateRequest {
     var serialNumber: UInt64
     var validFrom: NSDate
     var validTo: NSDate
-    var publicKeyDerEncoder: (SecKey -> [UInt8])?
+    var publicKeyDerEncoder: (SecKey -> [UInt8]?)?
     var keyUsage: KeyUsage
     
     init(forPublicKey key:SecKey, subjectCommonName:String, subjectEmailAddress:String, keyUsage:KeyUsage,
@@ -68,15 +68,19 @@ struct CertificateRequest {
         publicKeyDerEncoder = encodePublicKey
     }
     
-    func encodePublicKey(key:SecKey) -> [UInt8] {
+    func encodePublicKey(key:SecKey) -> [UInt8]? {
         return key.keyData
     }
     
-    func selfSign(withPrivateKey key:SecKey) -> [UInt8] {
-        let info = self.info(usingSubjectAsIssuer:true)
-        
+    func selfSign(withPrivateKey key:SecKey) -> [UInt8]? {
+        guard let info = self.info(usingSubjectAsIssuer:true) else {
+            return nil
+        }
+
         let dataToSign = info.toDER()
-        let signedData = key.sign(data:dataToSign)
+        guard let signedData = key.sign(data:dataToSign) else {
+            return nil
+        }
         let signature = BitString(data: NSData(bytes:signedData))
         
         let signedInfo: NSArray = [ info, [OID.rsaWithSHA1AlgorithmID, NSNull()], signature]
@@ -85,12 +89,15 @@ struct CertificateRequest {
 }
 
 extension CertificateRequest {
-    func info(usingSubjectAsIssuer usingSubjectAsIssuer: Bool = false) -> NSArray {
+    func info(usingSubjectAsIssuer usingSubjectAsIssuer: Bool = false) -> NSArray? {
         precondition(publicKeyDerEncoder != nil)
         
         let empty = NSNull()
         let version = ASN1Object(tag:0, tagClass:2, components:[3/*kCertRequestVersionNumber*/-1])
-        let encodedPubKey = NSData(bytes:publicKeyDerEncoder!(publicKey))
+        guard let bytes = publicKeyDerEncoder?(publicKey) else {
+            return nil
+        }
+        let encodedPubKey = NSData(bytes:bytes)
         let pubKeyBitStringArray : NSArray = [ [OID.rsaAlgorithmID, empty], BitString(data:encodedPubKey) ]
         let subject = CertificateName()
         subject.commonName = subjectCommonName
@@ -104,8 +111,8 @@ extension CertificateRequest {
         return info
     }
     
-    func toDER() -> [UInt8] {
-        return info().toDER()
+    func toDER() -> [UInt8]? {
+        return info()?.toDER()
     }
     
     func extensions() -> [NSArray] {

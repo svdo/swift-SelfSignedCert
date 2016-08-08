@@ -3,6 +3,7 @@
 import Foundation
 import Security
 import IDZSwiftCommonCrypto
+import SecurityExtensions
 
 extension SecIdentity
 {
@@ -26,8 +27,9 @@ extension SecIdentity
             return nil
         }
         let certRequest = CertificateRequest(forPublicKey:pubKey, subjectCommonName: name, subjectEmailAddress: email, keyUsage: [.DigitalSignature, .DataEncipherment])
-        let signedBytes = certRequest.selfSign(withPrivateKey:privKey)
-        guard let signedCert = SecCertificateCreateWithData(nil, NSData(bytes:signedBytes)) else {
+
+        guard let signedBytes = certRequest.selfSign(withPrivateKey:privKey),
+            signedCert = SecCertificateCreateWithData(nil, NSData(bytes:signedBytes)) else {
             return nil
         }
         
@@ -50,7 +52,10 @@ extension SecIdentity
         
         // Since the way identities are stored in the keychain is sparsely documented at best,
         // double-check that this identity is the one we're looking for.
-        guard let priv = identity.privateKey where priv.keyData == privKey.keyData else {
+        guard let priv = identity.privateKey,
+            retrievedKeyData = priv.keyData,
+            originalKeyData = privKey.keyData
+            where retrievedKeyData == originalKeyData else {
             return nil
         }
         
@@ -82,8 +87,11 @@ extension SecIdentity
      * - returns: an array of identities if found, or `nil`
      */
     static func findAll(withPublicKey pubKey:SecKey) -> [SecIdentity]? {
+        guard let keyData = pubKey.keyData else {
+            return nil
+        }
         let sha1 = Digest(algorithm: .SHA1)
-        sha1.update(pubKey.keyData)
+        sha1.update(keyData)
         let digest = sha1.final()
         let digestData = NSData(bytes: digest)
         
