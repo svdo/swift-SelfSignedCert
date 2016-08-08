@@ -15,16 +15,7 @@ class SecKey_KeyDataTests: QuickSpec {
                 expect(keyData.count) > 0
             }.toNot(throwError())
         }
-        
-        xit("cannot get private key data") {
-            expect { Void->Void in
-                let (priv, _) = try SecKey.generateKeyPair(ofSize: 512)
-                let keyData = priv.keyData
-                try NSData(bytes:keyData).writeToFile("/tmp/privkeydata.bin", options: .AtomicWrite)
-                expect(keyData.count) == 0
-            }.toNot(throwError())
-        }
-        
+                
     }
     
 }
