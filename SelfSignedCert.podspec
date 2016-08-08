@@ -23,5 +23,5 @@ Pod::Spec.new do |s|
   s.source_files  = "SelfSignedCert/**/*.swift"
   s.dependency "IDZSwiftCommonCrypto", "~> 0.7"
   s.dependency "SwiftBytes", "~> 0.2"
-  s.dependency "SecurityExtenions", "~> 1.0"
+  s.dependency "SecurityExtensions", "~> 1.0"
 end
