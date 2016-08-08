@@ -1,5 +1,8 @@
-SecurityExtensions for Swift
-============================
+# SecurityExtensions for Swift
+[![CocoaPods Version Badge](https://img.shields.io/cocoapods/v/SecurityExtensions.svg)](https://cocoapods.org/pods/SecurityExtensions)
+[![License Badge](https://img.shields.io/cocoapods/l/SecurityExtensions.svg)](https://github.com/svdo/swift-SecurityExtensions/blob/master/LICENSE.txt)
+![Supported Platforms Badge](https://img.shields.io/cocoapods/p/SecurityExtensions.svg)
+[![Percentage Documented Badge](https://img.shields.io/cocoapods/metrics/doc-percent/SecurityExtensions.svg)](http://cocoadocs.org/docsets/SecurityExtensions)
 
 This framework intends to make it easier to use some of Apple's Security framework APIs from Swift. I tested this on iOS. It may also work on OS X, didn't look into that. You're welcome to create pull requests :)
 
@@ -87,6 +90,12 @@ Computes the digital signature of the given data using the current key. This ass
 
     let data: [UInt8] = [1, 2, 3]
     let signature: [UInt8]? = privateKey.sign(data)
+
+Usage
+-----
+The easiest way to use this library is using [CocoaPods](https://cocoapods.org). Just put something like this in your `Podfile`:
+
+    pod 'SecurityExtensions', '~> 1.0'
 
 License
 -------
