@@ -1,3 +1,7 @@
+Version 1.0.2
+=============
+Updated SecurityExtensions to 2.0.0.
+
 Version 1.0.1
 =============
 Extracted some code into separate project "SecurityExtensions" (see dependencies in podspec and Podfile).
