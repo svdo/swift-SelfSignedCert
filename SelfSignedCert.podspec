@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SelfSignedCert"
-  s.version      = "1.0.2"
+  s.version      = "2.0.0"
   s.summary      = "A framework for iOS that allows creating self-signed certificates, implemented in Swift."
   s.description  = <<-DESC
                    On iOS, you cannot simply create self-signed certificates.
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/svdo/swift-SelfSignedCert.git", :tag => "#{s.version}" }
   s.source_files  = "SelfSignedCert/**/*.swift"
-  s.dependency "IDZSwiftCommonCrypto", "~> 0.7"
-  s.dependency "SwiftBytes", "~> 0.2"
-  s.dependency "SecurityExtensions", "~> 2.0"
+  s.dependency "IDZSwiftCommonCrypto", "~> 0.9"
+  s.dependency "SwiftBytes", "~> 0.5"
+  s.dependency "SecurityExtensions", "~> 3.0"
 end
