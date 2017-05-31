@@ -4,9 +4,9 @@ import Foundation
 
 extension SecCertificate {
     func storeInKeychain() -> OSStatus {
-        let dict : [String:AnyObject] = [kSecClass as String: kSecClassCertificate as String,
-                                         kSecValueRef as String : self]
-        return SecItemAdd(dict, nil)
+        let dict : [NSString:AnyObject] = [kSecClass as NSString: kSecClassCertificate as NSString,
+                                         kSecValueRef as NSString : self]
+        return SecItemAdd(dict as CFDictionary, nil)
     }
     
 }

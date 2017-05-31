@@ -29,7 +29,7 @@ extension SecIdentity
         let certRequest = CertificateRequest(forPublicKey:pubKey, subjectCommonName: name, subjectEmailAddress: email, keyUsage: [.DigitalSignature, .DataEncipherment])
 
         guard let signedBytes = certRequest.selfSign(withPrivateKey:privKey),
-            signedCert = SecCertificateCreateWithData(nil, NSData(bytes:signedBytes)) else {
+            let signedCert = SecCertificateCreateWithData(nil, Data(bytes:signedBytes) as CFData) else {
             return nil
         }
         
@@ -53,9 +53,8 @@ extension SecIdentity
         // Since the way identities are stored in the keychain is sparsely documented at best,
         // double-check that this identity is the one we're looking for.
         guard let priv = identity.privateKey,
-            retrievedKeyData = priv.keyData,
-            originalKeyData = privKey.keyData
-            where retrievedKeyData == originalKeyData else {
+            let retrievedKeyData = priv.keyData,
+            let originalKeyData = privKey.keyData, retrievedKeyData == originalKeyData else {
             return nil
         }
         
@@ -71,7 +70,7 @@ extension SecIdentity
      * - returns: The identity if found, or `nil`.
      */
     static func find(withPublicKey pubKey:SecKey) -> SecIdentity? {
-        guard let identities = findAll(withPublicKey: pubKey) where identities.count == 1 else {
+        guard let identities = findAll(withPublicKey: pubKey), identities.count == 1 else {
             return nil
         }
         return identities[0]
@@ -90,18 +89,18 @@ extension SecIdentity
         guard let keyData = pubKey.keyData else {
             return nil
         }
-        let sha1 = Digest(algorithm: .SHA1)
-        sha1.update(keyData)
+        let sha1 = Digest(algorithm: .sha1)
+        _ = sha1.update(buffer: keyData, byteCount: keyData.count)
         let digest = sha1.final()
-        let digestData = NSData(bytes: digest)
+        let digestData = Data(bytes: digest)
         
         var out: AnyObject?
-        let query : [String:AnyObject] = [kSecClass as String: kSecClassIdentity as String,
-                                          kSecAttrKeyClass as String: kSecAttrKeyClassPrivate as String,
-                                          kSecMatchLimit as String : kSecMatchLimitAll as String,
-                                          kSecReturnRef as String : true,
-                                          kSecAttrApplicationLabel as String : digestData ]
-        let err = SecItemCopyMatching(query, &out)
+        let query : [NSString:AnyObject] = [kSecClass as NSString: kSecClassIdentity as NSString,
+                                            kSecAttrKeyClass as NSString: kSecAttrKeyClassPrivate as NSString,
+                                            kSecMatchLimit as NSString : kSecMatchLimitAll as NSString,
+                                            kSecReturnRef as NSString : NSNumber(value: true),
+                                            kSecAttrApplicationLabel as NSString : digestData as NSData ]
+        let err = SecItemCopyMatching(query as CFDictionary, &out)
         guard err == errSecSuccess else {
             return nil
         }

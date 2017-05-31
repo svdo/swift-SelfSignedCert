@@ -16,7 +16,7 @@ extension Bool {
     }
 }
 
-extension UnsignedIntegerType {
+extension UnsignedInteger {
     func encodeForDER() -> [UInt8] {
         var bytes : [UInt8] = SwiftBytes.bytes(self.toUIntMax()).removeLeadingZeros()
         if (bytes[0] & 0x80) == 0x80 {
@@ -29,7 +29,7 @@ extension UnsignedIntegerType {
     }
 }
 
-extension IntegerType {
+extension Integer {
     func toDER() -> [UInt8] {
         if self >= 0 {
             return UInt64(self.toIntMax()).toDER()
@@ -43,11 +43,11 @@ extension IntegerType {
     }
 }
 
-extension SequenceType where Generator.Element : IntegerType {
-    func removeLeading(number:Generator.Element) -> [Generator.Element] {
-        if self.minElement() == nil { return [] }
+extension Sequence where Iterator.Element : Integer {
+    func removeLeading(_ number:Iterator.Element) -> [Iterator.Element] {
+        if self.min() == nil { return [] }
         var nonNumberFound = false
-        let flat = self.flatMap { (elem:Generator.Element) -> Generator.Element? in
+        let flat = self.flatMap { (elem:Iterator.Element) -> Iterator.Element? in
             if (elem == number && !nonNumberFound ) {
                 return nil
             } else {
@@ -58,8 +58,8 @@ extension SequenceType where Generator.Element : IntegerType {
         return flat
     }
     
-    func removeLeadingZeros() -> [Generator.Element] {
-        if self.minElement() == nil { return [] }
+    func removeLeadingZeros() -> [Iterator.Element] {
+        if self.min() == nil { return [] }
         let removedZeros = self.removeLeading(0)
         if removedZeros.count == 0 {
             return [0]
@@ -69,8 +69,8 @@ extension SequenceType where Generator.Element : IntegerType {
         }
     }
     
-    func ensureSingleLeadingOneBit() -> [Generator.Element] {
-        if self.minElement() == nil { return [] }
+    func ensureSingleLeadingOneBit() -> [Iterator.Element] {
+        if self.min() == nil { return [] }
         let removedFF = self.removeLeading(0xFF)
         if removedFF.count == 0 {
             return [0xFF]
@@ -85,16 +85,16 @@ extension SequenceType where Generator.Element : IntegerType {
 extension String {
     
     private static let notPrintableCharSet : NSMutableCharacterSet = {
-        let charset = NSMutableCharacterSet(charactersInString:" '()+,-./:=?")
-        charset.formUnionWithCharacterSet(NSCharacterSet.alphanumericCharacterSet());
+        let charset = NSMutableCharacterSet(charactersIn:" '()+,-./:=?")
+        charset.formUnion(with: CharacterSet.alphanumerics);
         charset.invert();
         return charset;
     }()
     
     func toDER() -> [UInt8] {
-        if let asciiData = self.dataUsingEncoding(NSASCIIStringEncoding) {
+        if let asciiData = self.data(using: String.Encoding.ascii) {
             var tag:UInt8 = 19; // printablestring (a silly arbitrary subset of ASCII defined by ASN.1)
-            if let range = self.rangeOfCharacterFromSet(String.notPrintableCharSet) where /*!forcePrintableStrings && */range.endIndex > range.startIndex {
+            if let range = self.rangeOfCharacter(from: String.notPrintableCharSet as CharacterSet), /*!forcePrintableStrings && */range.upperBound > range.lowerBound {
                 tag = 20 // IA5string (full 7-bit ASCII)
             }
             return writeDER(tag: tag, tagClass: 0, constructed: false, bytes: asciiData.bytes)
@@ -113,21 +113,21 @@ extension BitString {
     }
 }
 
-var berGeneralizedTimeFormatter: NSDateFormatter {
-    let df = NSDateFormatter()
+var berGeneralizedTimeFormatter: DateFormatter {
+    let df = DateFormatter()
     df.dateFormat = "yyyyMMddHHmmss'Z'"
-    df.timeZone = NSTimeZone(name: "GMT")
+    df.timeZone = TimeZone(identifier: "GMT")
     return df
 }
 
-extension NSDate {
+extension Date {
     func toDER() -> [UInt8] {
-        let dateString = berGeneralizedTimeFormatter.stringFromDate(self)
+        let dateString = berGeneralizedTimeFormatter.string(from: self)
         return writeDER(tag: 24, constructed: false, bytes: [UInt8](dateString.utf8))
     }
 }
 
-extension NSData {
+extension Data {
     func toDER() -> [UInt8] {
         return writeDER(tag: 4, tagClass: 0, constructed: false, bytes: self.bytes)
     }
@@ -144,7 +144,7 @@ extension OID {
         while index < components.count {
             var nonZeroAdded = false
             let component = components[index]
-            for shift in 28.stride(through: 0, by: -7) {
+            for shift in stride(from: 28, through: 0, by: -7) {
                 let byte = UInt8((component >> UInt32(shift)) & 0x7F)
                 if (byte != 0 || nonZeroAdded) {
                     if (nonZeroAdded) {
@@ -210,7 +210,7 @@ extension NSSet {
     }
 }
 
-extension SequenceType where Generator.Element == NSObject {
+extension Sequence where Iterator.Element == NSObject {
     
 }
 
@@ -218,12 +218,12 @@ extension NSNumber {
     func toDER() -> [UInt8] {
         // Special-case detection of booleans by pointer equality, because otherwise they appear
         // identical to 0 and 1:
-        if (self===NSNumber(bool: true) || self===NSNumber(bool: false)) {
-            let value:UInt8 = self===NSNumber(bool:true) ?0xFF :0x00;
+        if (self===NSNumber(value: true) || self===NSNumber(value: false)) {
+            let value:UInt8 = self===NSNumber(value: true) ?0xFF :0x00;
             return writeDER(tag: 1, constructed: false, bytes: [value])
         }
         
-        guard let objcType = String.fromCString(self.objCType) else {
+        guard let objcType = String(validatingUTF8: self.objCType) else {
             assertionFailure("Could not get objcType of NSNumber")
             return []
         }
@@ -231,9 +231,9 @@ extension NSNumber {
         if (objcType.characters.count == 1) {
             switch(objcType) {
             case "c", "i", "s", "l", "q":
-                return self.longLongValue.toDER()
+                return self.int64Value.toDER()
             case "C", "I", "S", "L", "Q":
-                return self.unsignedLongLongValue.toDER()
+                return self.uint64Value.toDER()
             case "B":
                 return self.boolValue.toDER()
             default:
@@ -249,7 +249,7 @@ extension NSNumber {
 
 extension NSObject {
     func toDER_manualDispatch() -> [UInt8] {
-        if let d = self as? NSDate {
+        if let d = self as? Date {
 //            print("Date to DER: \(d)")
             let bytes = d.toDER()
 //            print("Date to DER: \(d) -> \(bytes)")
@@ -303,7 +303,7 @@ extension NSObject {
 //            print("Bitstring to DER: \(bitStr) -> \(bytes)")
             return bytes
         }
-        else if let data = self as? NSData {
+        else if let data = self as? Data {
 //            print("Data to DER: \(data)")
             let bytes = data.toDER()
 //            print("Data to DER: \(data) -> \(bytes)")
@@ -316,7 +316,7 @@ extension NSObject {
     }
 }
     
-private func encodeCollection(collection:[NSObject], tag:UInt8, tagClass:UInt8) -> [UInt8] {
+private func encodeCollection(_ collection:[NSObject], tag:UInt8, tagClass:UInt8) -> [UInt8] {
     var bytes = [UInt8]()
     for o in collection {
         bytes += o.toDER_manualDispatch()
@@ -324,11 +324,11 @@ private func encodeCollection(collection:[NSObject], tag:UInt8, tagClass:UInt8) 
     return writeDER(tag: tag, tagClass: tagClass, constructed: true, bytes: bytes)
 }
 
-func writeDER(tag tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
+func writeDER(tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, bytes:[UInt8]) -> [UInt8] {
     return writeDERHeader(tag: tag, tagClass: tagClass, constructed: constructed, length: UInt64(bytes.count)) + bytes
 }
 
-func writeDERHeader(tag tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, length:UInt64) -> [UInt8] {
+func writeDERHeader(tag:UInt8, tagClass:UInt8 = 0, constructed:Bool, length:UInt64) -> [UInt8] {
     let constructedBits : UInt8 = (constructed ? 1 : 0) << 5
     let classBits : UInt8 = tagClass << 6
     let headerByte1 : UInt8 = tag | constructedBits | classBits

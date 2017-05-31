@@ -235,9 +235,11 @@
 				TargetAttributes = {
 					F8B8C54D1CDBCCB800FC4174 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0830;
 					};
 					F8B8C5571CDBCCB800FC4174 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0830;
 					};
 				};
 			};

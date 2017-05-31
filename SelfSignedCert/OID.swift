@@ -9,7 +9,7 @@ class OID : NSObject {
         super.init()
     }
     
-    override func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? OID else {
             return false
         }

@@ -6,17 +6,17 @@ class BitString : NSObject {
     let data: [UInt8]
     let bitCount: UInt
     
-    convenience init(data:NSData) {
-        self.init(data: data.bytes)
+    convenience init(data:Data) {
+        self.init(bytes: data.bytes)
     }
     
-    init(data:[UInt8]) {
-        self.data = data
+    init(bytes:[UInt8]) {
+        self.data = bytes
         bitCount = UInt(data.count) * 8
     }
     
     override var description: String {
-        return "\(self.dynamicType)\(data)"
+        return "\(type(of: self))\(data)"
     }
     
 }

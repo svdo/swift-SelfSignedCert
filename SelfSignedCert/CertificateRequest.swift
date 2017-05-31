@@ -6,7 +6,7 @@ import Security
 /**
  * Option set used for specifying key usage in certificate requests.
  */
-struct KeyUsage : OptionSetType {
+struct KeyUsage : OptionSet {
     let rawValue:  UInt16
     init(rawValue: UInt16) { self.rawValue = rawValue }
     
@@ -34,13 +34,13 @@ struct CertificateRequest {
     var subjectCommonName: String
     var subjectEmailAddress: String
     var serialNumber: UInt64
-    var validFrom: NSDate
-    var validTo: NSDate
-    var publicKeyDerEncoder: (SecKey -> [UInt8]?)?
+    var validFrom: Date
+    var validTo: Date
+    var publicKeyDerEncoder: ((SecKey) -> [UInt8]?)?
     var keyUsage: KeyUsage
     
     init(forPublicKey key:SecKey, subjectCommonName:String, subjectEmailAddress:String, keyUsage:KeyUsage,
-                      validFrom:NSDate? = nil, validTo:NSDate? = nil, serialNumber:UInt64? = nil) {
+                      validFrom:Date? = nil, validTo:Date? = nil, serialNumber:UInt64? = nil) {
         self.publicKey = key
         self.subjectCommonName = subjectCommonName
         self.subjectEmailAddress = subjectEmailAddress
@@ -48,13 +48,13 @@ struct CertificateRequest {
             self.validFrom = from
         }
         else {
-            self.validFrom = NSDate()
+            self.validFrom = Date()
         }
         if let to = validTo {
             self.validTo = to
         }
         else {
-            self.validTo = self.validFrom.dateByAddingTimeInterval(365*24*3600)
+            self.validTo = self.validFrom.addingTimeInterval(365*24*3600)
         }
         
         if let serial = serialNumber {
@@ -68,7 +68,7 @@ struct CertificateRequest {
         publicKeyDerEncoder = encodePublicKey
     }
     
-    func encodePublicKey(key:SecKey) -> [UInt8]? {
+    func encodePublicKey(_ key:SecKey) -> [UInt8]? {
         return key.keyData
     }
     
@@ -81,7 +81,7 @@ struct CertificateRequest {
         guard let signedData = key.sign(data:dataToSign) else {
             return nil
         }
-        let signature = BitString(data: NSData(bytes:signedData))
+        let signature = BitString(data: Data(bytes:signedData))
         
         let signedInfo: NSArray = [ info, [OID.rsaWithSHA1AlgorithmID, NSNull()], signature]
         return signedInfo.toDER()
@@ -89,23 +89,27 @@ struct CertificateRequest {
 }
 
 extension CertificateRequest {
-    func info(usingSubjectAsIssuer usingSubjectAsIssuer: Bool = false) -> NSArray? {
+    func info(usingSubjectAsIssuer: Bool = false) -> NSArray? {
         precondition(publicKeyDerEncoder != nil)
         
         let empty = NSNull()
-        let version = ASN1Object(tag:0, tagClass:2, components:[3/*kCertRequestVersionNumber*/-1])
+        let version = ASN1Object(
+            tag:0, tagClass:2, components:[
+                NSNumber(value: 3 /*kCertRequestVersionNumber*/ - 1 )
+            ]
+        )
         guard let bytes = publicKeyDerEncoder?(publicKey) else {
             return nil
         }
-        let encodedPubKey = NSData(bytes:bytes)
+        let encodedPubKey = Data(bytes:bytes)
         let pubKeyBitStringArray : NSArray = [ [OID.rsaAlgorithmID, empty], BitString(data:encodedPubKey) ]
         let subject = CertificateName()
         subject.commonName = subjectCommonName
         subject.emailAddress = subjectEmailAddress
-        let ext = ASN1Object(tag: 3, tagClass: 2, components: [extensions()])
+        let ext = ASN1Object(tag: 3, tagClass: 2, components: [extensions() as NSObject])
         let subjectComponents = subject.components
         let info : NSArray = [
-            version, NSNumber(unsignedLongLong:serialNumber), [ OID.rsaAlgorithmID ], usingSubjectAsIssuer ? subjectComponents : [], [validFrom, validTo],
+            version, NSNumber(value: serialNumber as UInt64), [ OID.rsaAlgorithmID ], usingSubjectAsIssuer ? subjectComponents : [], [validFrom, validTo],
             subjectComponents, pubKeyBitStringArray, ext
         ]
         return info
@@ -124,10 +128,10 @@ extension CertificateRequest {
             bytes[0] = UInt8(keyUsageMask & 0xff)
             bytes[1] = UInt8(keyUsageMask >> 8)
             let length = 1 + ((bytes[1] != 0) ? 1 : 0)
-            let data = NSData(bytes:bytes, length: length)
+            let data = Data(bytes: UnsafePointer<UInt8>(bytes), count: length)
             let bitString = BitString(data:data)
             let encodedBitString = bitString.toDER()
-            extensions.append([OID.keyUsageOID, true/*critical*/, NSData(bytes: encodedBitString)])
+            extensions.append([OID.keyUsageOID, true/*critical*/, Data(bytes: encodedBitString)])
         }
         
         return extensions

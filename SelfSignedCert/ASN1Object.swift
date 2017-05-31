@@ -27,10 +27,10 @@ class ASN1Object : NSObject {
     
     override var description: String {
         if components != nil {
-            return String(format:"\(self.dynamicType)[%hhu/%u/%u]%@", tagClass, constructed ? 1 : 0, tag, components!);
+            return String(format:"\(type(of: self))[%hhu/%u/%u]%@", tagClass, constructed ? 1 : 0, tag, components!);
         }
         else {
-            return String(format:"\(self.dynamicType)[%hhu/%u/%u, %u bytes]", tagClass, constructed ? 1 : 0, tag, value!.count);
+            return String(format:"\(type(of: self))[%hhu/%u/%u, %u bytes]", tagClass, constructed ? 1 : 0, tag, value!.count);
         }
 
     }

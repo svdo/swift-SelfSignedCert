@@ -6,11 +6,11 @@ class CertificateName : NSObject {
     private(set) var components: [ Set<NSMutableArray> ]
     
     var commonName: String {
-        get { return stringForOID(OID.commonName) }
+        get { return string(for: OID.commonName) }
         set { setString(newValue, forOid:OID.commonName) }
     }
     var emailAddress: String {
-        get { return stringForOID(OID.email) }
+        get { return string(for: OID.email) }
         set { setString(newValue, forOid:OID.email) }
     }
     
@@ -19,15 +19,15 @@ class CertificateName : NSObject {
         super.init()
     }
     
-    func stringForOID(oid:OID) -> String {
-        guard let pair = pairForOID(oid), str = pair[1] as? String else {
+    func string(for oid:OID) -> String {
+        guard let pair = pair(for: oid), let str = pair[1] as? String else {
             return ""
         }
         return str
     }
     
-    func setString(string:String, forOid oid:OID) {
-        if let pair = pairForOID(oid) {
+    func setString(_ string:String, forOid oid:OID) {
+        if let pair = pair(for: oid) {
             pair[1] = string
         }
         else {
@@ -35,9 +35,9 @@ class CertificateName : NSObject {
         }
     }
     
-    private func pairForOID(oid:OID) -> NSMutableArray? {
+    private func pair(for oid:OID) -> NSMutableArray? {
         let filtered = components.filter { set in
-            guard let array = set.first, filteredOid = array[0] as? OID else {
+            guard let array = set.first, let filteredOid = array[0] as? OID else {
                 return false
             }
             return filteredOid == oid

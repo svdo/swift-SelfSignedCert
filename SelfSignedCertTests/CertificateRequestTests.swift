@@ -8,26 +8,26 @@ import IDZSwiftCommonCrypto
 
 class CertificateRequestTests: QuickSpec {
 
-    var dateComponents: NSDateComponents {
-        let dc = NSDateComponents()
+    var dateComponents: DateComponents {
+        var dc = DateComponents()
         dc.year = 2016
         dc.month = 5
         dc.day = 14
         dc.hour = 16
         dc.minute = 32
         dc.second = 0
-        dc.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+        dc.timeZone = TimeZone(secondsFromGMT: 0)
         return dc
     }
-    var validFrom: NSDate {
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-        return calendar!.dateFromComponents(dateComponents)!
+    var validFrom: Date {
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        return calendar.date(from: dateComponents)!
     }
-    var validTo: NSDate {
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-        let dc = dateComponents
-        dc.year = dc.year + 1
-        return calendar!.dateFromComponents(dc)!
+    var validTo: Date {
+        let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        var dc = dateComponents
+        dc.year = dc.year! + 1
+        return calendar.date(from: dc)!
     }
 
     override func spec() {
@@ -58,7 +58,7 @@ class CertificateRequestTests: QuickSpec {
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 expect(certReq.serialNumber) != 0
                 expect(fabs(certReq.validFrom.timeIntervalSinceNow)).to(beLessThan(1))
-                expect(fabs(certReq.validTo.timeIntervalSinceDate(certReq.validFrom) - 365*24*3600)).to(beLessThan(1))
+                expect(fabs(certReq.validTo.timeIntervalSince(certReq.validFrom) - 365*24*3600)).to(beLessThan(1))
             }.toNot(throwError())
         }
         
@@ -70,8 +70,8 @@ class CertificateRequestTests: QuickSpec {
                     expect(extensions.count) == 1
                     let ext = extensions[0]
                     expect(ext[0] as? OID) == OID.keyUsageOID
-                    expect(ext[1] as? NSNumber) == NSNumber(bool: true)
-                    let bitsData = ext[2] as! NSData
+                    expect(ext[1] as? NSNumber) == NSNumber(value: true)
+                    let bitsData = ext[2] as! Data
                     let bytes = bitsData.bytes
                     expect(bytes.count) == 4
                     expect(UInt16(bytes[3])) == KeyUsage.DigitalSignature.rawValue | KeyUsage.DataEncipherment.rawValue
@@ -82,15 +82,19 @@ class CertificateRequestTests: QuickSpec {
         it("can be DER encoded with preserialized public key") {
             var certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "J.R. 'Bob' Dobbs", subjectEmailAddress: "bob@subgenius.org", keyUsage: [.DigitalSignature, .DataEncipherment], validFrom:self.validFrom, validTo:self.validTo, serialNumber:484929458750)
             certReq.publicKeyDerEncoder = { pubKey in
-                let pubKeyPath = NSBundle(forClass: self.classForCoder).pathForResource("pubkey", ofType: "bin")
-                return NSData(contentsOfFile: pubKeyPath!)!.bytes
+                let pubKeyPath = Bundle(for: self.classForCoder).path(forResource:"pubkey", ofType: "bin")
+                let nsData = NSData(contentsOfFile: pubKeyPath!)!
+                return (nsData as Data).bytes
             }
             
-            let certDataPath = NSBundle(forClass: self.classForCoder).pathForResource("certdata", ofType: "der")
-            let expectedEncoded = NSData(contentsOfFile: certDataPath!)!.bytes
+            let certDataPath = Bundle(for: self.classForCoder).path(forResource: "certdata", ofType: "der")
+            let nsData = NSData(contentsOfFile: certDataPath!)!
+            let expectedEncoded = (nsData as Data).bytes
             
             let encoded = certReq.toDER()
-//            print(dumpData(encoded, prefix:"", separator:""))
+//            print(dumpData(encoded!, prefix:"", separator:""))
+//            print("---")
+//            print(dumpData(expectedEncoded, prefix:"", separator:""))
             expect(encoded) == expectedEncoded
         }
 
@@ -105,8 +109,8 @@ class CertificateRequestTests: QuickSpec {
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 let signedBytes = certReq.selfSign(withPrivateKey: privKey)!
-                let signedData = NSData(bytes: signedBytes)
-                let signedCert = SecCertificateCreateWithData(nil, signedData)
+                let signedData = Data(bytes: signedBytes)
+                let signedCert = SecCertificateCreateWithData(nil, signedData as CFData)
                 expect(signedCert).toNot(beNil())
                 let subjectSummary = SecCertificateCopySubjectSummary(signedCert!)
                 expect(subjectSummary).toNot(beNil())
@@ -123,10 +127,10 @@ class CertificateRequestTests: QuickSpec {
                 expect(identity).to(beNil())
                 
                 /* store in keychain */
-                let dict : [String:AnyObject] = [
-                    kSecClass as String: kSecClassCertificate as String,
-                    kSecValueRef as String : signedCert!]
-                let osresult = SecItemAdd(dict, nil)
+                let dict : [NSString:AnyObject] = [
+                    kSecClass as NSString: kSecClassCertificate as NSString,
+                    kSecValueRef as NSString : signedCert!]
+                let osresult = SecItemAdd(dict as CFDictionary, nil)
                 expect(osresult) == errSecSuccess
                 
                 /* now we can retrieve the identity */
@@ -141,8 +145,8 @@ class CertificateRequestTests: QuickSpec {
                 /* verify: same certificate */
                 var identityCertificate : SecCertificate?
                 expect(SecIdentityCopyCertificate(identity!, &identityCertificate)) == errSecSuccess
-                let identityCertificateData : NSData = SecCertificateCopyData(identityCertificate!)
-                let expectedCertificateData : NSData = SecCertificateCopyData(signedCert!)
+                let identityCertificateData : Data = SecCertificateCopyData(identityCertificate!) as Data
+                let expectedCertificateData : Data = SecCertificateCopyData(signedCert!) as Data
                 expect(identityCertificateData.bytes) == expectedCertificateData.bytes
                 
                 /* verify: same public key */
@@ -161,7 +165,7 @@ class CertificateRequestTests: QuickSpec {
     }
 }
 
-private func dumpData(data:[UInt8], prefix:String = "0x", separator:String = " ") -> String {
+private func dumpData(_ data:[UInt8], prefix:String = "0x", separator:String = " ") -> String {
     var str = ""
     for b in data {
         if str.characters.count > 0 {

@@ -54,13 +54,13 @@ class DERTests : QuickSpec {
             
             it("can encode bitstring") {
                 let str = "test"
-                let data = str.dataUsingEncoding(NSUTF8StringEncoding)!
+                let data = str.data(using: String.Encoding.utf8)!
                 let bitString = BitString(data: data)
                 expect(bitString.toDER()) == [0x03, 0x05, 0x00, 0x74, 0x65, 0x73, 0x74]
             }
             
             it("can encode dates") {
-                expect(NSDate(timeIntervalSinceReferenceDate: 265336576).toDER()) == [0x18, 0x0F] + [UInt8]("20090530003616Z".utf8)
+                expect(Date(timeIntervalSinceReferenceDate: 265336576).toDER()) == [0x18, 0x0F] + [UInt8]("20090530003616Z".utf8)
             }
             
             it("can encode simple sequence") {
@@ -113,7 +113,7 @@ class DERTests : QuickSpec {
             
             describe("ASN.1 Objects") {
                 it("can encode ASN.1 object with components") {
-                    expect(ASN1Object(tag:0, tagClass:2, components:[NSNumber(int:2)]).toDER()) == [0xa0, 0x03, 0x02, 0x01, 0x02]
+                    expect(ASN1Object(tag:0, tagClass:2, components:[NSNumber(value:2 as Int)]).toDER()) == [0xa0, 0x03, 0x02, 0x01, 0x02]
                 }
                 it("can encode ASN.1 object without components") {
                     let data = [UInt8]("test".utf8)
