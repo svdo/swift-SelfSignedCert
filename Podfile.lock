@@ -1,25 +1,25 @@
 PODS:
-  - IDZSwiftCommonCrypto (0.7.3)
-  - Nimble (4.1.0)
-  - Quick (0.9.3)
-  - SecurityExtensions (2.0.0):
-    - IDZSwiftCommonCrypto (~> 0.7)
-  - SwiftBytes (0.3.1)
+  - IDZSwiftCommonCrypto (0.9.1)
+  - Nimble (6.1.0)
+  - Quick (1.1.0)
+  - SecurityExtensions (3.0.2):
+    - IDZSwiftCommonCrypto (~> 0.9)
+  - SwiftBytes (0.5.0)
 
 DEPENDENCIES:
   - IDZSwiftCommonCrypto (~> 0.7)
-  - Nimble (~> 4.0)
-  - Quick (~> 0.9)
-  - SecurityExtensions (~> 2.0)
+  - Nimble (~> 6.1)
+  - Quick (~> 1.1)
+  - SecurityExtensions (~> 3.0)
   - SwiftBytes (~> 0.2)
 
 SPEC CHECKSUMS:
-  IDZSwiftCommonCrypto: f4271e731bdeefa85832d425629134fc01efd659
-  Nimble: 97a0a4cae5124c117115634b2d055d8c97d0af19
-  Quick: 13a2a2b19a5d8e3ed4fd0c36ee46597fd77ebf71
-  SecurityExtensions: 3ea1edda005e9720fa854c7f510d10a2b7debef6
-  SwiftBytes: 262e08479bc103bbb4eccd296e8b8ffb2102f7c3
+  IDZSwiftCommonCrypto: c44fe5c0219a219846b56b4c148615dd06e58591
+  Nimble: c53e6903fee94041b90ded74f135820437d8bf59
+  Quick: dafc587e21eed9f4cab3249b9f9015b0b7a7f71d
+  SecurityExtensions: fe8359cd9fda03545acc973ab105f1f17d973832
+  SwiftBytes: f34958e14b54908e59b29d776300f8dedc259624
 
-PODFILE CHECKSUM: b62aac7ad2f283890a21b09e656d3d1833c99bcd
+PODFILE CHECKSUM: e6a1c5a41e909ac1c05afa47a1093807a2abf695
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.1

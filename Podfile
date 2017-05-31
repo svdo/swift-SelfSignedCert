@@ -7,11 +7,11 @@ target 'SelfSignedCert' do
   #pod 'SwiftKeychain', '~> 1.0'
   pod 'IDZSwiftCommonCrypto', '~> 0.7'
   pod 'SwiftBytes', '~> 0.2'
-  pod 'SecurityExtensions', '~> 2.0'
+  pod 'SecurityExtensions', '~> 3.0'
 
   target 'SelfSignedCertTests' do
-    pod 'Quick', '~> 0.9'
-    pod 'Nimble', '~> 4.0'
+    pod 'Quick', '~> 1.1'
+    pod 'Nimble', '~> 6.1'
   end
 
 end

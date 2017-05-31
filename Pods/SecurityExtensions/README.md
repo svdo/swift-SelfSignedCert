@@ -1,10 +1,14 @@
 # SecurityExtensions for Swift
+
+![Swift Version 3](https://img.shields.io/badge/Swift-v3-yellow.svg)
 [![CocoaPods Version Badge](https://img.shields.io/cocoapods/v/SecurityExtensions.svg)](https://cocoapods.org/pods/SecurityExtensions)
 [![License Badge](https://img.shields.io/cocoapods/l/SecurityExtensions.svg)](https://github.com/svdo/swift-SecurityExtensions/blob/master/LICENSE.txt)
 ![Supported Platforms Badge](https://img.shields.io/cocoapods/p/SecurityExtensions.svg)
 [![Percentage Documented Badge](https://img.shields.io/cocoapods/metrics/doc-percent/SecurityExtensions.svg)](http://cocoadocs.org/docsets/SecurityExtensions)
 
 This framework intends to make it easier to use some of Apple's Security framework APIs from Swift. I tested this on iOS. It may also work on OS X, didn't look into that. You're welcome to create pull requests :)
+
+This framework requires Swift version 3.
 
 Overview
 --------
@@ -102,6 +106,12 @@ Returns the tag that was used to store the key in the keychain.
 
     let key: SecKey = ...
     let tag: String = key.keychainTag
+
+#### keychainTag(forKeyData:)
+Returns the tag of a key represented by the given data. Normally you should prefer using the instance property `keychainTag` instead.
+
+    let keyData: [UInt8] = ...
+    let tag: String = SecKey.keychainTag(forKeyData: keyData)
 
 #### loadFromKeychain(tag:)
 Loads a key from the keychain based on the tag. The tag is the string returned by `keychainTag`.
