@@ -33,7 +33,10 @@ extension SecIdentity
             return nil
         }
         
-        signedCert.storeInKeychain()
+        let err = signedCert.storeInKeychain()
+        guard err == errSecSuccess else {
+            return nil
+        }
 
         return findIdentity(forPrivateKey:privKey, publicKey:pubKey)
     }
