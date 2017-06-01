@@ -1,3 +1,7 @@
+Version 2.0.1
+=============
+Added Carthage support.
+
 Version 2.0.0
 =============
 Upgraded to Swift 3 (using Xcode 8.3.2).
