@@ -10,3 +10,6 @@ xcuserdata
 **/.idea/runConfigurations
 **/.idea/modules.xml
 **/.idea/workspace.xml
+
+# Carthage
+Carthage
