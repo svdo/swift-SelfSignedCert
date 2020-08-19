@@ -16,7 +16,7 @@ class OID : NSObject {
         return components == other.components
     }
     
-    override var hashValue: Int {
+    override var hash: Int {
         var hash : Int = 0
         for i in components {
             hash = hash &+ Int(i)

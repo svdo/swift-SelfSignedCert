@@ -18,7 +18,7 @@ extension Bool {
 
 extension UnsignedInteger {
     func encodeForDER() -> [UInt8] {
-        var bytes : [UInt8] = SwiftBytes.bytes(self.toUIntMax()).removeLeadingZeros()
+        var bytes : [UInt8] = SwiftBytes.bytes(UInt64(self)).removeLeadingZeros()
         if (bytes[0] & 0x80) == 0x80 {
             bytes = [0x00] + bytes
         }
@@ -29,13 +29,13 @@ extension UnsignedInteger {
     }
 }
 
-extension Integer {
+extension SignedInteger {
     func toDER() -> [UInt8] {
         if self >= 0 {
-            return UInt64(self.toIntMax()).toDER()
+            return UInt64(UInt64(self)).toDER()
         }
         else {
-            let bitPattern = ~(-self.toIntMax()) + 1
+            let bitPattern = ~(-Int64(self)) + 1
             let twosComplement = UInt64(bitPattern:bitPattern)
             let bytes : [UInt8] = SwiftBytes.bytes(twosComplement).ensureSingleLeadingOneBit()
             return writeDER(tag: 2, constructed: false, bytes: bytes)
@@ -43,11 +43,11 @@ extension Integer {
     }
 }
 
-extension Sequence where Iterator.Element : Integer {
+extension Sequence where Iterator.Element : BinaryInteger {
     func removeLeading(_ number:Iterator.Element) -> [Iterator.Element] {
         if self.min() == nil { return [] }
         var nonNumberFound = false
-        let flat = self.flatMap { (elem:Iterator.Element) -> Iterator.Element? in
+        let flat = self.compactMap { (elem:Iterator.Element) -> Iterator.Element? in//self.flatMap
             if (elem == number && !nonNumberFound ) {
                 return nil
             } else {
@@ -228,7 +228,7 @@ extension NSNumber {
             return []
         }
         
-        if (objcType.characters.count == 1) {
+        if (objcType.count == 1) {
             switch(objcType) {
             case "c", "i", "s", "l", "q":
                 return self.int64Value.toDER()

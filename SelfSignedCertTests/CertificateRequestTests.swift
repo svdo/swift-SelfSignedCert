@@ -44,7 +44,7 @@ class CertificateRequestTests: QuickSpec {
         }
         
         it("Can construct certificate request") {
-            expect { Void->Void in
+            expect { ()->() in
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 expect(certReq.subjectCommonName) == "Test Name"
                 expect(certReq.subjectEmailAddress) == "test@example.com"
@@ -54,7 +54,7 @@ class CertificateRequestTests: QuickSpec {
         }
         
         it("Has default field values") {
-            expect { Void->Void in
+            expect { ()->() in
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 expect(certReq.serialNumber) != 0
                 expect(fabs(certReq.validFrom.timeIntervalSinceNow)).to(beLessThan(1))
@@ -64,7 +64,7 @@ class CertificateRequestTests: QuickSpec {
         
         describe("key usage") {
             it("is stored correctly in extensions") {
-                expect { Void->Void in
+                expect { ()->() in
                     let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                     let extensions = certReq.extensions()
                     expect(extensions.count) == 1
@@ -105,7 +105,7 @@ class CertificateRequestTests: QuickSpec {
         }
         
         it("Can sign") {
-            expect { Void->Void in
+            expect { ()->() in
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 let signedBytes = certReq.selfSign(withPrivateKey: privKey)!
@@ -168,7 +168,7 @@ class CertificateRequestTests: QuickSpec {
 private func dumpData(_ data:[UInt8], prefix:String = "0x", separator:String = " ") -> String {
     var str = ""
     for b in data {
-        if str.characters.count > 0 {
+        if str.count > 0 {
             str += separator
         }
         str += prefix + String(format: "%.2x", b)
