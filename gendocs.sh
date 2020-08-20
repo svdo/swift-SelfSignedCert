@@ -1,7 +1,5 @@
 #!/bin/sh
-
-#version=`cat SelfSignedCert.podspec|grep "version"|cut -d ':' -f 2|sed "s|.*\"\(.*\)\".*|\1|"`
-version=0.1
+version=`cat SelfSignedCert.podspec|grep "version"|cut -d ':' -f 2|sed "s|.*\"\(.*\)\".*|\1|"`
 
 jazzy \
   --clean \
