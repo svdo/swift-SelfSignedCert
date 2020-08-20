@@ -168,7 +168,7 @@ class CertificateRequestTests: QuickSpec {
 private func dumpData(_ data:[UInt8], prefix:String = "0x", separator:String = " ") -> String {
     var str = ""
     for b in data {
-        if str.characters.count > 0 {
+        if str.count > 0 {
             str += separator
         }
         str += prefix + String(format: "%.2x", b)

@@ -228,7 +228,7 @@ extension NSNumber {
             return []
         }
         
-        if (objcType.characters.count == 1) {
+        if (objcType.count == 1) {
             switch(objcType) {
             case "c", "i", "s", "l", "q":
                 return self.int64Value.toDER()
