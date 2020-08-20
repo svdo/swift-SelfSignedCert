@@ -24,4 +24,5 @@ Pod::Spec.new do |s|
   s.dependency "IDZSwiftCommonCrypto", "~> 0.13"
   s.dependency "SwiftBytes", "~> 0.6"
   s.dependency "SecurityExtensions", "~> 4.0"
+  s.swift_version = '5'
 end
