@@ -128,7 +128,7 @@ extension CertificateRequest {
             bytes[0] = UInt8(keyUsageMask & 0xff)
             bytes[1] = UInt8(keyUsageMask >> 8)
             let length = 1 + ((bytes[1] != 0) ? 1 : 0)
-            let data = Data(bytes: UnsafePointer<UInt8>(bytes), count: length)
+            let data = Data(bytes: bytes, count: length)
             let bitString = BitString(data:data)
             let encodedBitString = bitString.toDER()
             extensions.append([OID.keyUsageOID, true/*critical*/, Data(encodedBitString)])
