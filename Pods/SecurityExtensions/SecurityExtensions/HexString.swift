@@ -22,13 +22,13 @@ extension String {
      * - returns: the parsed byte array, or nil if parsing failed
      */
     public func hexByteArray() -> [UInt8]? {
-        guard self.characters.count % 2 == 0 else {
+        guard self.count % 2 == 0 else {
             return nil
         }
         let stringToConvert: String
         let prefixRange = self.range(of: "0x")
         if let r = prefixRange, r.lowerBound == self.startIndex && r.upperBound != r.lowerBound {
-            stringToConvert = self.substring(from: r.upperBound)
+            stringToConvert = String(self[r.upperBound...])
         }
         else {
             stringToConvert = self
@@ -39,11 +39,11 @@ extension String {
 
 private func stringToByteArray(_ string: String) -> [UInt8]? {
     var result = [UInt8]()
-    for byteIndex in 0 ..< string.characters.count/2 {
-        let start = string.characters.index(string.startIndex, offsetBy: byteIndex*2)
-        let end = string.characters.index(start, offsetBy: 2)
-        let byteString = string.substring(with: start ..< end)
-        guard let byte = scanHexByte(byteString) else {
+    for byteIndex in 0 ..< string.count/2 {
+        let start = string.index(string.startIndex, offsetBy: byteIndex*2)
+        let end = string.index(start, offsetBy: 2)
+        let byteString = string[start ..< end]
+        guard let byte = scanHexByte(String(byteString)) else {
             return nil
         }
         result.append(byte)
