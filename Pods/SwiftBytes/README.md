@@ -1,13 +1,11 @@
 # Swift Bytes
-![Swift Version 3](https://img.shields.io/badge/Swift-v3-yellow.svg)
+![Swift Version 4](https://img.shields.io/badge/Swift-v4-yellow.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods Version Badge](https://img.shields.io/cocoapods/v/SwiftBytes.svg)](https://cocoapods.org/pods/SwiftBytes)
 [![License Badge](https://img.shields.io/cocoapods/l/SwiftBytes.svg)](LICENSE.txt)
 ![Supported Platforms Badge](https://img.shields.io/cocoapods/p/SwiftBytes.svg)
 
-
-
-This library contains a collection of helper methods for byte manipulation in Swift. It requires Swift 3.
+This library contains a collection of helper methods for byte manipulation in Swift. It requires Swift 4.
 
 If you're like me, and can never remember whether you should double right-shift or tripple left-shift to get to the bits you want, then this library might be of some use to you.
 
