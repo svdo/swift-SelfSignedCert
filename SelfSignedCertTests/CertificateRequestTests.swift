@@ -109,7 +109,7 @@ class CertificateRequestTests: QuickSpec {
                 let (privKey, pubKey) = try SecKey.generateKeyPair(ofSize: 2048)
                 let certReq = CertificateRequest(forPublicKey: pubKey, subjectCommonName: "Test Name", subjectEmailAddress: "test@example.com", keyUsage: [.DigitalSignature, .DataEncipherment])
                 let signedBytes = certReq.selfSign(withPrivateKey: privKey)!
-                let signedData = Data(bytes: signedBytes)
+                let signedData = Data(signedBytes)
                 let signedCert = SecCertificateCreateWithData(nil, signedData as CFData)
                 expect(signedCert).toNot(beNil())
                 let subjectSummary = SecCertificateCopySubjectSummary(signedCert!)

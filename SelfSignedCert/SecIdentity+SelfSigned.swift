@@ -29,7 +29,7 @@ extension SecIdentity
         let certRequest = CertificateRequest(forPublicKey:pubKey, subjectCommonName: name, subjectEmailAddress: email, keyUsage: [.DigitalSignature, .DataEncipherment])
 
         guard let signedBytes = certRequest.selfSign(withPrivateKey:privKey),
-            let signedCert = SecCertificateCreateWithData(nil, Data(bytes:signedBytes) as CFData) else {
+            let signedCert = SecCertificateCreateWithData(nil, Data(signedBytes) as CFData) else {
             return nil
         }
         
@@ -95,7 +95,7 @@ extension SecIdentity
         let sha1 = Digest(algorithm: .sha1)
         _ = sha1.update(buffer: keyData, byteCount: keyData.count)
         let digest = sha1.final()
-        let digestData = Data(bytes: digest)
+        let digestData = Data(digest)
         
         var out: AnyObject?
         let query : [NSString:AnyObject] = [kSecClass as NSString: kSecClassIdentity as NSString,

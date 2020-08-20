@@ -81,7 +81,7 @@ struct CertificateRequest {
         guard let signedData = key.sign(data:dataToSign) else {
             return nil
         }
-        let signature = BitString(data: Data(bytes:signedData))
+        let signature = BitString(data: Data(signedData))
         
         let signedInfo: NSArray = [ info, [OID.rsaWithSHA1AlgorithmID, NSNull()], signature]
         return signedInfo.toDER()
@@ -101,7 +101,7 @@ extension CertificateRequest {
         guard let bytes = publicKeyDerEncoder?(publicKey) else {
             return nil
         }
-        let encodedPubKey = Data(bytes:bytes)
+        let encodedPubKey = Data(bytes)
         let pubKeyBitStringArray : NSArray = [ [OID.rsaAlgorithmID, empty], BitString(data:encodedPubKey) ]
         let subject = CertificateName()
         subject.commonName = subjectCommonName
@@ -131,7 +131,7 @@ extension CertificateRequest {
             let data = Data(bytes: UnsafePointer<UInt8>(bytes), count: length)
             let bitString = BitString(data:data)
             let encodedBitString = bitString.toDER()
-            extensions.append([OID.keyUsageOID, true/*critical*/, Data(bytes: encodedBitString)])
+            extensions.append([OID.keyUsageOID, true/*critical*/, Data(encodedBitString)])
         }
         
         return extensions
