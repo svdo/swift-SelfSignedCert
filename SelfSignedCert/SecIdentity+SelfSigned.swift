@@ -72,7 +72,7 @@ extension SecIdentity
      * - parameter withPublicKey: the public key that should be used to find the identity, based on it's digest
      * - returns: The identity if found, or `nil`.
      */
-    static func find(withPublicKey pubKey:SecKey) -> SecIdentity? {
+    public static func find(withPublicKey pubKey:SecKey) -> SecIdentity? {
         guard let identities = findAll(withPublicKey: pubKey), identities.count == 1 else {
             return nil
         }
