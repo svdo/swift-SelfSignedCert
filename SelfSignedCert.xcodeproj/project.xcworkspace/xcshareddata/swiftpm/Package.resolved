@@ -54,6 +54,15 @@
           "revision": "2fcd0003c8d56f72e04ee9dcbff6dd0d3128fbc0",
           "version": null
         }
+      },
+      {
+        "package": "SecurityExtensions",
+        "repositoryURL": "https://github.com/skogland/swift-SecurityExtensions",
+        "state": {
+          "branch": null,
+          "revision": "ac5fad0ddd3779b6c8cce6c813f15521fbdd6313",
+          "version": "5.0.0"
+        }
       }
     ]
   },
