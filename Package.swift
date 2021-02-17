@@ -17,7 +17,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/iosdevzone/IDZSwiftCommonCrypto", from: "0.13.1"),
         .package(name: "SecurityExtensions", url: "https://github.com/skogland/swift-SecurityExtensions", from: "5.0.0"),
-        .package(name: "SwiftBytes", url: "https://github.com/dapperstout/swift-bytes", .branch("master"))
+        .package(name: "SwiftBytes", url: "https://github.com/skogland/swift-bytes.git", from: "0.8.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

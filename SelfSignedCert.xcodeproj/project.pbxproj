@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E28955A425DD591C0058AE6B /* SwiftBytes in Frameworks */ = {isa = PBXBuildFile; productRef = E28955A325DD591C0058AE6B /* SwiftBytes */; };
 		E2BB089225DD50C100B6FED4 /* SecurityExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = E2BB089125DD50C100B6FED4 /* SecurityExtensions */; };
 		E2D1DCA625DABD1900114EDE /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCA525DABD1900114EDE /* Nimble */; };
 		E2D1DCAC25DABD4C00114EDE /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCAB25DABD4C00114EDE /* Quick */; };
-		E2D1DCE325DABFB600114EDE /* SwiftBytes in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCE225DABFB600114EDE /* SwiftBytes */; };
 		E2D1DCE925DABFE300114EDE /* IDZSwiftCommonCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCE825DABFE300114EDE /* IDZSwiftCommonCrypto */; };
 		F81B16AF1CEA19FB00C1EBD8 /* OIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81B16AE1CEA19FB00C1EBD8 /* OIDTests.swift */; };
 		F855135C1CE772210023ADEF /* certdata.der in Resources */ = {isa = PBXBuildFile; fileRef = F855135A1CE772210023ADEF /* certdata.der */; };
@@ -95,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2D1DCE325DABFB600114EDE /* SwiftBytes in Frameworks */,
+				E28955A425DD591C0058AE6B /* SwiftBytes in Frameworks */,
 				E2BB089225DD50C100B6FED4 /* SecurityExtensions in Frameworks */,
 				E2D1DCE925DABFE300114EDE /* IDZSwiftCommonCrypto in Frameworks */,
 			);
@@ -233,9 +233,9 @@
 			);
 			name = SelfSignedCert;
 			packageProductDependencies = (
-				E2D1DCE225DABFB600114EDE /* SwiftBytes */,
 				E2D1DCE825DABFE300114EDE /* IDZSwiftCommonCrypto */,
 				E2BB089125DD50C100B6FED4 /* SecurityExtensions */,
+				E28955A325DD591C0058AE6B /* SwiftBytes */,
 			);
 			productName = SelfSignedCert;
 			productReference = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */;
@@ -302,9 +302,9 @@
 			packageReferences = (
 				E2D1DCA425DABD1900114EDE /* XCRemoteSwiftPackageReference "Nimble" */,
 				E2D1DCAA25DABD4C00114EDE /* XCRemoteSwiftPackageReference "Quick" */,
-				E2D1DCE125DABFB600114EDE /* XCRemoteSwiftPackageReference "swift-bytes" */,
 				E2D1DCE725DABFE300114EDE /* XCRemoteSwiftPackageReference "IDZSwiftCommonCrypto" */,
 				E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */,
+				E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */,
 			);
 			productRefGroup = F8B8C54F1CDBCCB800FC4174 /* Products */;
 			projectDirPath = "";
@@ -726,6 +726,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/skogland/swift-bytes.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.0;
+			};
+		};
 		E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/skogland/swift-SecurityExtensions";
@@ -750,14 +758,6 @@
 				minimumVersion = 3.1.2;
 			};
 		};
-		E2D1DCE125DABFB600114EDE /* XCRemoteSwiftPackageReference "swift-bytes" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dapperstout/swift-bytes";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		E2D1DCE725DABFE300114EDE /* XCRemoteSwiftPackageReference "IDZSwiftCommonCrypto" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iosdevzone/IDZSwiftCommonCrypto";
@@ -769,6 +769,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E28955A325DD591C0058AE6B /* SwiftBytes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */;
+			productName = SwiftBytes;
+		};
 		E2BB089125DD50C100B6FED4 /* SecurityExtensions */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */;
@@ -783,11 +788,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2D1DCAA25DABD4C00114EDE /* XCRemoteSwiftPackageReference "Quick" */;
 			productName = Quick;
-		};
-		E2D1DCE225DABFB600114EDE /* SwiftBytes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2D1DCE125DABFB600114EDE /* XCRemoteSwiftPackageReference "swift-bytes" */;
-			productName = SwiftBytes;
 		};
 		E2D1DCE825DABFE300114EDE /* IDZSwiftCommonCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
