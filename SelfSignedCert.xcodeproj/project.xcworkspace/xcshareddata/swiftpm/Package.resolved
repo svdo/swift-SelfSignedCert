@@ -48,11 +48,11 @@
       },
       {
         "package": "SwiftBytes",
-        "repositoryURL": "https://github.com/dapperstout/swift-bytes",
+        "repositoryURL": "https://github.com/skogland/swift-bytes.git",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "2fcd0003c8d56f72e04ee9dcbff6dd0d3128fbc0",
-          "version": null
+          "version": "0.8.0"
         }
       },
       {
