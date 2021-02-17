@@ -1,6 +1,0 @@
-framework module SecurityExtensions {
-  umbrella header "SecurityExtensions-umbrella.h"
-
-  export *
-  module * { export * }
-}
