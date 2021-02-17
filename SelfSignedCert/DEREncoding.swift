@@ -117,6 +117,7 @@ var berGeneralizedTimeFormatter: DateFormatter {
     let df = DateFormatter()
     df.dateFormat = "yyyyMMddHHmmss'Z'"
     df.timeZone = TimeZone(identifier: "GMT")
+    df.locale = Locale(identifier: "nb")
     return df
 }
 
