@@ -12,20 +12,20 @@
       },
       {
         "package": "SwiftBytes",
-        "repositoryURL": "https://github.com/skogland/swift-bytes.git",
+        "repositoryURL": "https://github.com/dapperstout/swift-bytes.git",
         "state": {
           "branch": null,
-          "revision": "2fcd0003c8d56f72e04ee9dcbff6dd0d3128fbc0",
+          "revision": "570b0b8d8694594a41bba998c5ad82eb711fa2de",
           "version": "0.8.0"
         }
       },
       {
         "package": "SecurityExtensions",
-        "repositoryURL": "https://github.com/skogland/swift-SecurityExtensions",
+        "repositoryURL": "https://github.com/svdo/swift-SecurityExtensions",
         "state": {
           "branch": null,
-          "revision": "ac5fad0ddd3779b6c8cce6c813f15521fbdd6313",
-          "version": "5.0.0"
+          "revision": "22a6b3ad4afae59e8dd33b0ccb45fa50cb1deab3",
+          "version": "4.0.1"
         }
       }
     ]

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E28955A425DD591C0058AE6B /* SwiftBytes in Frameworks */ = {isa = PBXBuildFile; productRef = E28955A325DD591C0058AE6B /* SwiftBytes */; };
-		E2BB089225DD50C100B6FED4 /* SecurityExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = E2BB089125DD50C100B6FED4 /* SecurityExtensions */; };
 		E2D1DCA625DABD1900114EDE /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCA525DABD1900114EDE /* Nimble */; };
 		E2D1DCAC25DABD4C00114EDE /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCAB25DABD4C00114EDE /* Quick */; };
 		E2D1DCE925DABFE300114EDE /* IDZSwiftCommonCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = E2D1DCE825DABFE300114EDE /* IDZSwiftCommonCrypto */; };
@@ -22,6 +20,8 @@
 		F85DD03124EEBCBA00446EB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F85DD03024EEBCBA00446EB7 /* Assets.xcassets */; };
 		F85DD03424EEBCBA00446EB7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F85DD03224EEBCBA00446EB7 /* LaunchScreen.storyboard */; };
 		F86D2E001CF48D170036B444 /* SecCertificate+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86D2DFF1CF48D170036B444 /* SecCertificate+Keychain.swift */; };
+		F8825C3A2670B15900867A3F /* SecurityExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = F8825C392670B15900867A3F /* SecurityExtensions */; };
+		F8825C3D2670B1DC00867A3F /* SwiftBytes in Frameworks */ = {isa = PBXBuildFile; productRef = F8825C3C2670B1DC00867A3F /* SwiftBytes */; };
 		F8B8C5521CDBCCB800FC4174 /* SelfSignedCert.h in Headers */ = {isa = PBXBuildFile; fileRef = F8B8C5511CDBCCB800FC4174 /* SelfSignedCert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F8B8C5591CDBCCB800FC4174 /* SelfSignedCert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */; };
 		F8B8C55E1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8C55D1CDBCCB800FC4174 /* SecIdentity+SelfSignedTests.swift */; };
@@ -95,8 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E28955A425DD591C0058AE6B /* SwiftBytes in Frameworks */,
-				E2BB089225DD50C100B6FED4 /* SecurityExtensions in Frameworks */,
+				F8825C3D2670B1DC00867A3F /* SwiftBytes in Frameworks */,
+				F8825C3A2670B15900867A3F /* SecurityExtensions in Frameworks */,
 				E2D1DCE925DABFE300114EDE /* IDZSwiftCommonCrypto in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,8 +234,8 @@
 			name = SelfSignedCert;
 			packageProductDependencies = (
 				E2D1DCE825DABFE300114EDE /* IDZSwiftCommonCrypto */,
-				E2BB089125DD50C100B6FED4 /* SecurityExtensions */,
-				E28955A325DD591C0058AE6B /* SwiftBytes */,
+				F8825C392670B15900867A3F /* SecurityExtensions */,
+				F8825C3C2670B1DC00867A3F /* SwiftBytes */,
 			);
 			productName = SelfSignedCert;
 			productReference = F8B8C54E1CDBCCB800FC4174 /* SelfSignedCert.framework */;
@@ -303,8 +303,8 @@
 				E2D1DCA425DABD1900114EDE /* XCRemoteSwiftPackageReference "Nimble" */,
 				E2D1DCAA25DABD4C00114EDE /* XCRemoteSwiftPackageReference "Quick" */,
 				E2D1DCE725DABFE300114EDE /* XCRemoteSwiftPackageReference "IDZSwiftCommonCrypto" */,
-				E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */,
-				E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */,
+				F8825C382670B15900867A3F /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */,
+				F8825C3B2670B1DC00867A3F /* XCRemoteSwiftPackageReference "swift-bytes" */,
 			);
 			productRefGroup = F8B8C54F1CDBCCB800FC4174 /* Products */;
 			projectDirPath = "";
@@ -437,7 +437,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vandenoord.SelfSignedCert.TestHost;
@@ -467,7 +467,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vandenoord.SelfSignedCert.TestHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -726,22 +726,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/skogland/swift-bytes.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.0;
-			};
-		};
-		E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/skogland/swift-SecurityExtensions";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 		E2D1DCA425DABD1900114EDE /* XCRemoteSwiftPackageReference "Nimble" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Quick/Nimble";
@@ -766,19 +750,25 @@
 				minimumVersion = 0.13.1;
 			};
 		};
+		F8825C382670B15900867A3F /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/svdo/swift-SecurityExtensions.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+		F8825C3B2670B1DC00867A3F /* XCRemoteSwiftPackageReference "swift-bytes" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dapperstout/swift-bytes.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E28955A325DD591C0058AE6B /* SwiftBytes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E28955A225DD591C0058AE6B /* XCRemoteSwiftPackageReference "swift-bytes" */;
-			productName = SwiftBytes;
-		};
-		E2BB089125DD50C100B6FED4 /* SecurityExtensions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2BB089025DD50C100B6FED4 /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */;
-			productName = SecurityExtensions;
-		};
 		E2D1DCA525DABD1900114EDE /* Nimble */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E2D1DCA425DABD1900114EDE /* XCRemoteSwiftPackageReference "Nimble" */;
@@ -793,6 +783,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2D1DCE725DABFE300114EDE /* XCRemoteSwiftPackageReference "IDZSwiftCommonCrypto" */;
 			productName = IDZSwiftCommonCrypto;
+		};
+		F8825C392670B15900867A3F /* SecurityExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F8825C382670B15900867A3F /* XCRemoteSwiftPackageReference "swift-SecurityExtensions" */;
+			productName = SecurityExtensions;
+		};
+		F8825C3C2670B1DC00867A3F /* SwiftBytes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F8825C3B2670B1DC00867A3F /* XCRemoteSwiftPackageReference "swift-bytes" */;
+			productName = SwiftBytes;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
