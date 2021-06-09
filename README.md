@@ -1,9 +1,11 @@
 # SelfSignedCert
+
 ![Swift Version 5](https://img.shields.io/badge/Swift-v5-yellow.svg)
 [![CocoaPods Version Badge](https://img.shields.io/cocoapods/v/SelfSignedCert.svg)](https://cocoapods.org/pods/SelfSignedCert)
 [![License Badge](https://img.shields.io/cocoapods/l/SelfSignedCert.svg)](LICENSE.txt)
 ![Supported Platforms Badge](https://img.shields.io/cocoapods/p/SelfSignedCert.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 This project provides a Swift framework that allows you to create self-signed
 certificates on iOS, using Swift. Unfortunately, Apple does not provide this
