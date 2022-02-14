@@ -17,7 +17,13 @@ extension SecIdentity
      * - parameter subjectEmailAddress: the email address of the subject of the self-signed certificate that is created
      * - returns: The created identity, or `nil` when there was an error.
      */
-    public static func create(ofSize bits:UInt = 3072, subjectCommonName name:String, subjectEmailAddress email:String) -> SecIdentity? {
+    public static func create(
+        ofSize bits:UInt = 3072,
+        subjectCommonName name:String,
+        subjectEmailAddress email:String,
+        validFrom:Date? = nil,
+        validTo:Date? = nil
+    ) -> SecIdentity? {
         let privKey: SecKey
         let pubKey: SecKey
         do {
@@ -26,7 +32,14 @@ extension SecIdentity
         catch {
             return nil
         }
-        let certRequest = CertificateRequest(forPublicKey:pubKey, subjectCommonName: name, subjectEmailAddress: email, keyUsage: [.DigitalSignature, .DataEncipherment])
+        let certRequest = CertificateRequest(
+            forPublicKey:pubKey,
+            subjectCommonName: name,
+            subjectEmailAddress: email,
+            keyUsage: [.DigitalSignature, .DataEncipherment],
+            validFrom: validFrom,
+            validTo: validTo
+        )
 
         guard let signedBytes = certRequest.selfSign(withPrivateKey:privKey),
             let signedCert = SecCertificateCreateWithData(nil, Data(signedBytes) as CFData) else {
