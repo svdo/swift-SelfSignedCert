@@ -17,7 +17,10 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/iosdevzone/IDZSwiftCommonCrypto", from: "0.13.1"),
         .package(name: "SecurityExtensions", url: "https://github.com/svdo/swift-SecurityExtensions", from: "4.0.1"),
-        .package(name: "SwiftBytes", url: "https://github.com/dapperstout/swift-bytes.git", from: "0.8.0")
+        .package(name: "SwiftBytes", url: "https://github.com/dapperstout/swift-bytes.git", from: "0.8.0"),
+
+        .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "5.0.0"),
+        .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "10.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -27,6 +30,19 @@ let package = Package(
             dependencies: ["IDZSwiftCommonCrypto", "SecurityExtensions", "SwiftBytes"],
             path: "SelfSignedCert",
             exclude: ["Info.plist"]
+        ),
+        .testTarget(
+            name: "SelfSignedCertTests",
+            dependencies: [
+                "Quick",
+                "Nimble",
+                "SelfSignedCert"
+            ],
+            path: "SelfSignedCertTests",
+            resources: [
+                .copy("certdata.der"),
+                .copy("pubkey.bin")
+            ]
         )
     ]
 )

@@ -2,6 +2,7 @@
 
 import Quick
 import Nimble
+import Security
 @testable import SelfSignedCert
 
 class SelfSignedCertTests: QuickSpec {

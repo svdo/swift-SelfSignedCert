@@ -69,7 +69,10 @@ struct CertificateRequest {
     }
     
     func encodePublicKey(_ key:SecKey) -> [UInt8]? {
-        return key.keyData
+        guard let data = SecKeyCopyExternalRepresentation(key, nil) as? Data else {
+            return nil
+        }
+        return data.bytes
     }
     
     func selfSign(withPrivateKey key:SecKey) -> [UInt8]? {
