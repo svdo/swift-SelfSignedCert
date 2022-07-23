@@ -143,29 +143,6 @@ class DERTests : QuickSpec {
                 }
             }
         }
-        
-        describe("Leading zeros") {
-            it ("can remove leading zeros") {
-                expect([UInt8]().removeLeadingZeros()) == []
-                expect([0].removeLeadingZeros()) == [0]
-                expect([1].removeLeadingZeros()) == [1]
-                expect([0,0].removeLeadingZeros()) == [0]
-                expect([1,0].removeLeadingZeros()) == [1,0]
-                expect([0,1].removeLeadingZeros()) == [1]
-                expect([1,1].removeLeadingZeros()) == [1,1]
-            }
-            
-            it ("can compress leading 0xFF") {
-                expect([UInt8]().ensureSingleLeadingOneBit()) == []
-                expect([0].ensureSingleLeadingOneBit()) == [0xFF, 0]
-                expect([1].ensureSingleLeadingOneBit()) == [0xFF, 1]
-                expect([0xFF].ensureSingleLeadingOneBit()) == [0xFF]
-                expect([0xFF,0xFF].ensureSingleLeadingOneBit()) == [0xFF]
-                expect([0xFF,0xFF,0x00].ensureSingleLeadingOneBit()) == [0xFF,0x00]
-                expect([0x80].ensureSingleLeadingOneBit()) == [0x80]
-                expect([0x40].ensureSingleLeadingOneBit()) == [0xFF,0x40]
-            }
-        }
     }
     
 }

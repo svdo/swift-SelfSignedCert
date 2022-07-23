@@ -10,6 +10,7 @@ enum DERTag: UInt8 {
     case boolean = 1
     case integer = 2
     case bitString = 3
+    case octetString = 4
 }
 
 enum DERTagClass: UInt8 {
@@ -84,12 +85,12 @@ struct DERBuilder {
     }
 }
 
-protocol DERCEncodable {
+protocol DEREncodable {
     var derHeader: DERHeader { get }
     func encodeDERContent(to builder: inout DERBuilder)
 }
 
-extension DERCEncodable {
+extension DEREncodable {
     func toDER() -> [UInt8] {
         var builder = DERBuilder()
         builder.appendHeader(derHeader)
@@ -98,7 +99,7 @@ extension DERCEncodable {
     }
 }
 
-extension Bool: DERCEncodable {
+extension Bool: DEREncodable {
     var derHeader: DERHeader {
         .init(tag: .boolean, byteCount: 1)
     }
@@ -145,16 +146,38 @@ extension BinaryInteger {
     }
 }
 
-extension Int: DERCEncodable {}
-extension Int8: DERCEncodable {}
-extension Int16: DERCEncodable {}
-extension Int32: DERCEncodable {}
-extension Int64: DERCEncodable {}
-extension UInt: DERCEncodable {}
-extension UInt8: DERCEncodable {}
-extension UInt16: DERCEncodable {}
-extension UInt32: DERCEncodable {}
-extension UInt64: DERCEncodable {}
+extension Int: DEREncodable {}
+extension Int8: DEREncodable {}
+extension Int16: DEREncodable {}
+extension Int32: DEREncodable {}
+extension Int64: DEREncodable {}
+extension UInt: DEREncodable {}
+extension UInt8: DEREncodable {}
+extension UInt16: DEREncodable {}
+extension UInt32: DEREncodable {}
+extension UInt64: DEREncodable {}
+
+extension BitString: DEREncodable {
+    var derHeader: DERHeader {
+        .init(tag: .bitString, byteCount: 1 + data.count)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        builder.append(UInt8(unusedBitCount))
+        builder.append(contentsOf: data)
+    }
+}
+
+extension Data: DEREncodable {
+    var derHeader: DERHeader {
+        .init(tag: .octetString, byteCount: count)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        builder.append(contentsOf: self)
+    }
+}
+
 
 extension NSNull {
     func toDER() -> [UInt8] {
@@ -186,7 +209,7 @@ extension Sequence where Iterator.Element : BinaryInteger {
         }
         return flat
     }
-    
+
     func removeLeadingZeros() -> [Iterator.Element] {
         if self.min() == nil { return [] }
         let removedZeros = self.removeLeading(0)
@@ -197,22 +220,9 @@ extension Sequence where Iterator.Element : BinaryInteger {
             return removedZeros
         }
     }
-    
-    func ensureSingleLeadingOneBit() -> [Iterator.Element] {
-        if self.min() == nil { return [] }
-        let removedFF = self.removeLeading(0xFF)
-        if removedFF.count == 0 {
-            return [0xFF]
-        }
-        else if  removedFF[0] & 0x80 != 0x80 {
-            return [0xFF] + removedFF
-        }
-        return removedFF
-    }
 }
 
 extension String {
-    
     private static let notPrintableCharSet : NSMutableCharacterSet = {
         let charset = NSMutableCharacterSet(charactersIn:" '()+,-./:=?")
         charset.formUnion(with: CharacterSet.alphanumerics);
@@ -234,14 +244,6 @@ extension String {
     }
 }
 
-extension BitString {
-    func toDER() -> [UInt8] {
-        let bytes = writeDERHeader(tag: 3, tagClass: 0, constructed: false, length: UInt64(1+bitCount/8))
-        let unused = UInt8((8 - (bitCount % 8)) % 8)
-        assert(unused == 0)
-        return bytes + [unused] + data
-    }
-}
 
 var berGeneralizedTimeFormatter: DateFormatter {
     let df = DateFormatter()
@@ -255,12 +257,6 @@ extension Date {
     func toDER() -> [UInt8] {
         let dateString = berGeneralizedTimeFormatter.string(from: self)
         return writeDER(tag: 24, constructed: false, bytes: [UInt8](dateString.utf8))
-    }
-}
-
-extension Data {
-    func toDER() -> [UInt8] {
-        return writeDER(tag: 4, tagClass: 0, constructed: false, bytes: self.bytes)
     }
 }
 
@@ -378,8 +374,30 @@ extension NSNumber {
     }
 }
 
+class NSAnyDEREncodable: NSObject {
+    func toDER() -> [UInt8] {
+        fatalError()
+    }
+}
+
+final class NSDEREncodable<Value: DEREncodable>: NSAnyDEREncodable {
+    var value: Value
+
+    init(_ value: Value) {
+        self.value = value
+    }
+
+    override func toDER() -> [UInt8] {
+        value.toDER()
+    }
+}
+
 extension NSObject {
     func toDER_manualDispatch() -> [UInt8] {
+        if let wrapper = self as? NSAnyDEREncodable {
+            return wrapper.toDER()
+        }
+
         if let d = self as? Date {
 //            print("Date to DER: \(d)")
             let bytes = d.toDER()
@@ -426,12 +444,6 @@ extension NSObject {
 //            print("OID to DER: \(oid)")
             let bytes = oid.toDER()
 //            print("OID to DER: \(oid) -> \(bytes)")
-            return bytes
-        }
-        else if let bitStr = self as? BitString {
-//            print("Bitstring to DER: \(bitStr)")
-            let bytes = bitStr.toDER()
-//            print("Bitstring to DER: \(bitStr) -> \(bytes)")
             return bytes
         }
         else if let data = self as? Data {
