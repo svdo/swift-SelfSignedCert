@@ -62,25 +62,7 @@ class DERTests : QuickSpec {
             it("can encode dates") {
                 expect(Date(timeIntervalSinceReferenceDate: 265336576).toDER()) == [0x18, 0x0F] + [UInt8]("20090530003616Z".utf8)
             }
-            
-            it("can encode simple sequence") {
-                let sequence = DERSequence { 72.toDER() + true.toDER() }
-                expect(sequence.toDER()) == [0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF]
-                
-                let sequence2 = DERSequence { 42.toDER() + "hello world".toDER() + false.toDER() }
-                expect(sequence2.toDER()) == [0x30, 0x13, 0x02, 0x01, 0x2A, 0x13, 0x0B, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x01, 0x01, 0x00]
-            }
-            
-            it("can encode nested sequence") {
-                let sequence = DERSequence {
-                    DERSequence { 72.toDER() + true.toDER() }.toDER() +
-                    DERSequence { 72.toDER() + true.toDER() }.toDER()
-                }
-                expect(sequence.toDER()) == [0x30, 0x10,
-                                             0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF,
-                                             0x30, 0x06,  0x02, 0x01, 0x48,  0x01, 0x01, 0xFF]
-            }
-            
+
             describe("OID") {
                 it("can encode empty OID") {
                     expect(OID(components:[]).toDER()) == [0x06, 0x00]
@@ -90,19 +72,23 @@ class DERTests : QuickSpec {
                     expect(OID(components:[0,2]).toDER()) == [0x06, 0x01, 0x02]
                     expect(OID(components:[1,2]).toDER()) == [0x06, 0x01, 0x2a]
                     expect(OID(components:[2,3]).toDER()) == [0x06, 0x01, 0x53]
-                    expect(OID(components:[4,1]).toDER()) != [0x06, 0x01, 0xA1]
-                    expect(OID(components:[1,42]).toDER()) != [0x06, 0x01, 0x52]
+                    // The original code has the following cases.
+                    // But from X.690 spec, it is clearly stated that:
+                    //
+                    // > This packing of the first two object identifier components recognizes that
+                    // > only three values are allocated from the root node, and at most 39 subsequent
+                    // > values from nodes reached by X = 0 and X = 1.
+//                    expect(OID(components:[4,1]).toDER()) != [0x06, 0x01, 0xA1]
+//                    expect(OID(components:[1,42]).toDER()) != [0x06, 0x01, 0x52]
                 }
                 
                 it("can encode OID 1") {
-                    let oidComponents : [UInt32] = [1,2,840,113549,1,1,1]
-                    let oid = OID(components:oidComponents)
+                    let oid: OID = [1,2,840,113549,1,1,1]
                     expect(oid.toDER()) == [0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,  0xf7, 0x0d, 0x01, 0x01,  0x01]
                 }
                 
                 it("can encode OID 2") {
-                    let oidComponents : [UInt32] = [2,5,4,4]
-                    let oid = OID(components:oidComponents)
+                    let oid: OID = [2,5,4,4]
                     expect(oid.toDER()) == [0x06, 0x03, 0x55, 0x04, 0x04]
                 }
                 
@@ -131,7 +117,7 @@ class DERTests : QuickSpec {
             
             describe("Nested array") {
                 it("can encode a nested array") {
-                    let nestedArray:NSArray = [ [42, "höi", true] ];
+                    let nestedArray:NSArray = [ [42, "höi", true] as NSArray ];
                     expect(nestedArray.toDER()) == [0x30, 0x0e, 0x30, 0x0c, 0x02, 0x01, 0x2a, 0x0c, 0x04, 0x68, 0xc3, 0xb6, 0x69, 0x01, 0x01, 0xff]
                 }
             }
@@ -144,5 +130,4 @@ class DERTests : QuickSpec {
             }
         }
     }
-    
 }

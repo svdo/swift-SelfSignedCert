@@ -132,6 +132,7 @@ class CertificateRequestTests: QuickSpec {
                 let signedData = Data(signedBytes)
                 let signedCert = SecCertificateCreateWithData(nil, signedData as CFData)
                 expect(signedCert).toNot(beNil())
+                guard signedCert != nil else { return }
                 let subjectSummary = SecCertificateCopySubjectSummary(signedCert!)
                 expect(subjectSummary).toNot(beNil())
                 expect(subjectSummary! as String) == "Test Name"

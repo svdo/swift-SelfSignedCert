@@ -11,6 +11,16 @@ enum DERTag: UInt8 {
     case integer = 2
     case bitString = 3
     case octetString = 4
+    case objectIdentifier = 6
+    case utf8String = 12
+    case printableString = 19
+    case sequence = 16
+    case `set` = 17
+    // According to Wikipedia, this should be 22 instead of 20.
+    // However, the original code from @svdo uses 20, and so is the test fixtures.
+    // TODO: Figure out whether we should use 20 or 22.
+    case ia5String = 20 // 22
+    case generalizedTime = 24
 }
 
 enum DERTagClass: UInt8 {
@@ -178,6 +188,115 @@ extension Data: DEREncodable {
     }
 }
 
+extension String: DEREncodable {
+    private static let printableCharset: CharacterSet = {
+        var charset = CharacterSet.alphanumerics
+        charset.formUnion(.init(charactersIn: " '()+,-./:=?"))
+        return charset
+    }()
+
+    private var tag: DERTag {
+        for scalar in unicodeScalars {
+            guard scalar.isASCII else { return .utf8String }
+            guard Self.printableCharset.contains(scalar) else { return .ia5String }
+        }
+        return .printableString
+    }
+
+    var derHeader: DERHeader {
+        .init(tag: tag, byteCount: utf8.count)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        builder.append(contentsOf: utf8)
+    }
+}
+
+extension Date: DEREncodable {
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMddHHmmss'Z'"
+        formatter.timeZone = TimeZone(identifier: "GMT")
+        formatter.locale = Locale(identifier: "nb")
+        return formatter
+    }()
+
+    var derHeader: DERHeader {
+        assert(Self.formatter.string(from: self).utf8.count == 15)
+        return .init(tag: .generalizedTime, byteCount: 15)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        builder.append(contentsOf: Self.formatter.string(from: self).utf8)
+    }
+}
+
+@resultBuilder
+struct DERListBuilder {
+    static func buildExpression<T: DEREncodable>(_ value: T) -> [any DEREncodable] {
+        [value]
+    }
+
+    static func buildBlock(_ components: [any DEREncodable]...) -> [any DEREncodable] {
+        components.reduce(into: []) { $0 += $1 }
+    }
+
+    static func buildEither(first component: [any DEREncodable]) -> [any DEREncodable] {
+        component
+    }
+
+    static func buildEither(second component: [any DEREncodable]) -> [any DEREncodable] {
+        component
+    }
+
+    static func buildOptional(_ component: [DEREncodable]?) -> [DEREncodable] {
+        component ?? []
+    }
+
+    static func buildPartialBlock(first: [any DEREncodable]) -> [any DEREncodable] {
+        first
+    }
+
+    static func buildPartialBlock(accumulated: [any DEREncodable], next: [any DEREncodable]) -> [any DEREncodable] {
+        accumulated + next
+    }
+}
+
+struct DERList: DEREncodable {
+    var tag: DERTag
+    var list: [any DEREncodable]
+
+    init(tag: DERTag, @DERListBuilder buildContent: () -> [any DEREncodable]) {
+        self.tag = tag
+        self.list = buildContent()
+    }
+
+    var derHeader: DERHeader {
+        let byteCount = list.reduce(0) {
+            let header = $1.derHeader
+            return $0 + header.headerByteCount + header.byteCount
+        }
+        return .init(tag: tag, primitivity: .construction, byteCount: byteCount)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        for node in list {
+            builder.appendHeader(node.derHeader)
+            node.encodeDERContent(to: &builder)
+        }
+    }
+}
+
+//extension NSSet {
+//    func toDER() -> [UInt8] {
+//        var objects = [NSObject]()
+//        for o in self {
+//            objects.append(o as! NSObject)
+//        }
+//        return encodeCollection(objects, tag: 17, tagClass: 0)
+//    }
+//}
+
 
 extension NSNull {
     func toDER() -> [UInt8] {
@@ -222,78 +341,6 @@ extension Sequence where Iterator.Element : BinaryInteger {
     }
 }
 
-extension String {
-    private static let notPrintableCharSet : NSMutableCharacterSet = {
-        let charset = NSMutableCharacterSet(charactersIn:" '()+,-./:=?")
-        charset.formUnion(with: CharacterSet.alphanumerics);
-        charset.invert();
-        return charset;
-    }()
-    
-    func toDER() -> [UInt8] {
-        if let asciiData = self.data(using: String.Encoding.ascii) {
-            var tag:UInt8 = 19; // printablestring (a silly arbitrary subset of ASCII defined by ASN.1)
-            if let range = self.rangeOfCharacter(from: String.notPrintableCharSet as CharacterSet), /*!forcePrintableStrings && */range.upperBound > range.lowerBound {
-                tag = 20 // IA5string (full 7-bit ASCII)
-            }
-            return writeDER(tag: tag, tagClass: 0, constructed: false, bytes: asciiData.bytes)
-        } else {
-            let utf8Bytes = [UInt8](self.utf8)
-            return writeDER(tag: 12, constructed: false, bytes: utf8Bytes)
-        }
-    }
-}
-
-
-var berGeneralizedTimeFormatter: DateFormatter {
-    let df = DateFormatter()
-    df.dateFormat = "yyyyMMddHHmmss'Z'"
-    df.timeZone = TimeZone(identifier: "GMT")
-    df.locale = Locale(identifier: "nb")
-    return df
-}
-
-extension Date {
-    func toDER() -> [UInt8] {
-        let dateString = berGeneralizedTimeFormatter.string(from: self)
-        return writeDER(tag: 24, constructed: false, bytes: [UInt8](dateString.utf8))
-    }
-}
-
-extension OID {
-    func toDER() -> [UInt8] {
-        var bytes = [UInt8]()
-        var index = 0
-        if (components.count >= 2 && components[0] <= 3 && components[1] < 40) {
-            bytes.append(UInt8(components[0]) * 40 + UInt8(components[1]))
-            index = 2
-        }
-        while index < components.count {
-            var nonZeroAdded = false
-            let component = components[index]
-            for shift in stride(from: 28, through: 0, by: -7) {
-                let byte = UInt8((component >> UInt32(shift)) & 0x7F)
-                if (byte != 0 || nonZeroAdded) {
-                    if (nonZeroAdded) {
-                        bytes[bytes.count-1] |= 0x80
-                    }
-                    bytes.append(byte)
-                    nonZeroAdded = true
-                }
-            }
-            index = index + 1
-        }
-        return writeDER(tag: 6, tagClass: 0, constructed:  false, bytes: bytes)
-    }
-}
-
-struct DERSequence {
-    let contentsGenerator:()->[UInt8]
-    func toDER() -> [UInt8] {
-        return writeDER(tag: 16, constructed: true, bytes: contentsGenerator())
-    }
-}
-
 extension ASN1Object {
     func toDER() -> [UInt8] {
         if let comps = self.components {
@@ -335,10 +382,6 @@ extension NSSet {
         }
         return encodeCollection(objects, tag: 17, tagClass: 0)
     }
-}
-
-extension Sequence where Iterator.Element == NSObject {
-    
 }
 
 extension NSNumber {
