@@ -1,18 +1,164 @@
-//  Copyright © 2016 Stefan van den Oord. All rights reserved.
+// SelfSignedCert
+//
+// Copyright © 2022 Minsheng Liu. All rights reserved.
+// Copyright © 2016 Stefan van den Oord. All rights reserved.
 
 import Foundation
 import SwiftBytes
 
-extension NSNull {
-    func toDER() -> [UInt8] {
-        return writeDER(tag: 5, constructed: false, bytes: [])
+enum DERTag: UInt8 {
+    case boolean = 1
+    case integer = 2
+    case bitString = 3
+}
+
+enum DERTagClass: UInt8 {
+    case universal = 0
+    case application = 1
+    case contextSpecific = 2
+    case `private` = 3
+}
+
+enum DERPrimitivity: UInt8 {
+    case primitive = 0
+    case construction = 1
+}
+
+struct DERHeader: Equatable {
+    var tag: DERTag
+    var tagClass: DERTagClass = .universal
+    var primitivity: DERPrimitivity = .primitive
+    var byteCount: Int
+}
+
+private extension DERHeader {
+    var headerByteCount: Int {
+        var base = 2
+        // Here we assume the additional byte can hold the tag completely.
+        if tag.rawValue >= 0b11111 {
+            base += 1
+        }
+        if byteCount > 0x7F {
+            base += Int.bitWidth / 8 - byteCount.leadingZeroBitCount / 8
+        }
+        return base
+    }
+
+    func encodeDER(to bytes: inout [UInt8]) {
+        let identifier: UInt8 =
+            (tagClass.rawValue << 6) +
+            (primitivity.rawValue << 5) +
+            min(tag.rawValue, 0b11111)
+        bytes.append(identifier)
+
+        if tag.rawValue >= 0b11111 {
+            assert(tag.rawValue.leadingZeroBitCount > 0)
+            bytes.append(tag.rawValue)
+        }
+
+        if byteCount <= 0x7F {
+            bytes.append(UInt8(byteCount))
+            return
+        }
+
+        let lengthByteCount = Int.bitWidth / 8 - byteCount.leadingZeroBitCount / 8
+        bytes.append(0x80 + UInt8(lengthByteCount))
+        let lengthBytes = UInt64(byteCount).bigEndianBytes.drop { $0 == 0 }
+        bytes.append(contentsOf: lengthBytes)
     }
 }
 
-extension Bool {
+struct DERBuilder {
+    private(set) var bytes: [UInt8] = []
+
+    mutating func appendHeader(_ header: DERHeader) {
+        header.encodeDER(to: &bytes)
+    }
+
+    mutating func append(_ byte: UInt8) {
+        bytes.append(byte)
+    }
+
+    mutating func append<S: Sequence>(contentsOf data: S) where S.Element == UInt8 {
+        bytes.append(contentsOf: data)
+    }
+}
+
+protocol DERCEncodable {
+    var derHeader: DERHeader { get }
+    func encodeDERContent(to builder: inout DERBuilder)
+}
+
+extension DERCEncodable {
     func toDER() -> [UInt8] {
-        let value : UInt8 = self ? 0xFF : 0x00
-        return writeDER(tag:1, constructed:false, bytes:[value])
+        var builder = DERBuilder()
+        builder.appendHeader(derHeader)
+        encodeDERContent(to: &builder)
+        return builder.bytes
+    }
+}
+
+extension Bool: DERCEncodable {
+    var derHeader: DERHeader {
+        .init(tag: .boolean, byteCount: 1)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        builder.append(self ? 0xFF : 0)
+    }
+}
+
+extension BinaryInteger {
+    private var normalized: (bitPattern: UInt64, byteCount: Int) {
+        guard Self.isSigned || UInt64(self).leadingZeroBitCount > 0 else {
+            // In this case, we have to add a zero padding byte.
+            return (UInt64(self), 9)
+        }
+
+        // Otherwise, the value can be held in Int64.
+        let value = Int64(self)
+        let isNegative = value < 0
+        var bitPattern = UInt64(bitPattern: value)
+
+        var detector = bitPattern
+        if isNegative {
+            detector = ~detector
+        }
+        // The spec requires the first 9 bits must not be the same.
+        let bytesToDrop = max(detector.leadingZeroBitCount - 1, 0) / 8
+        bitPattern <<= bytesToDrop * 8
+        return (bitPattern, 8 - bytesToDrop)
+    }
+
+    var derHeader: DERHeader {
+        .init(tag: .integer, byteCount: normalized.byteCount)
+    }
+
+    func encodeDERContent(to builder: inout DERBuilder) {
+        let (bitPattern, byteCount) = normalized
+        guard byteCount <= 8 else {
+            builder.append(0)
+            builder.append(contentsOf: UInt64(self).bigEndianBytes)
+            return
+        }
+        builder.append(contentsOf: bitPattern.bigEndianBytes.prefix(byteCount))
+    }
+}
+
+extension Int: DERCEncodable {}
+extension Int8: DERCEncodable {}
+extension Int16: DERCEncodable {}
+extension Int32: DERCEncodable {}
+extension Int64: DERCEncodable {}
+extension UInt: DERCEncodable {}
+extension UInt8: DERCEncodable {}
+extension UInt16: DERCEncodable {}
+extension UInt32: DERCEncodable {}
+extension UInt64: DERCEncodable {}
+
+extension NSNull {
+    func toDER() -> [UInt8] {
+        return writeDER(tag: 5, constructed: false, bytes: [])
     }
 }
 
@@ -23,23 +169,6 @@ extension UnsignedInteger {
             bytes = [0x00] + bytes
         }
         return bytes
-    }
-    func toDER() -> [UInt8] {
-        return writeDER(tag: 2, constructed: false, bytes: self.encodeForDER())
-    }
-}
-
-extension BinaryInteger {
-    func toDER() -> [UInt8] {
-        if self >= 0 {
-            return UInt64(self).toDER()
-        }
-        else {
-            let bitPattern = ~(-Int64(self)) + 1
-            let twosComplement = UInt64(bitPattern:bitPattern)
-            let bytes : [UInt8] = SwiftBytes.bytes(twosComplement).ensureSingleLeadingOneBit()
-            return writeDER(tag: 2, constructed: false, bytes: bytes)
-        }
     }
 }
 
@@ -109,6 +238,7 @@ extension BitString {
     func toDER() -> [UInt8] {
         let bytes = writeDERHeader(tag: 3, tagClass: 0, constructed: false, length: UInt64(1+bitCount/8))
         let unused = UInt8((8 - (bitCount % 8)) % 8)
+        assert(unused == 0)
         return bytes + [unused] + data
     }
 }
