@@ -1,6 +1,8 @@
 //  Copyright © 2016 Stefan van den Oord. All rights reserved.
 
 import XCTest
+import CryptoKit
+
 import Quick
 import Nimble
 import IDZSwiftCommonCrypto
@@ -195,4 +197,97 @@ private func dumpData(_ data:[UInt8], prefix:String = "0x", separator:String = "
         str += prefix + String(format: "%.2x", b)
     }
     return str
+}
+
+final class GenCertTests: XCTestCase {
+    func testTBSCert() {
+        let serioNo = UInt64(Date.timeIntervalSinceReferenceDate * 1000)
+        let issuer = Certificate.Name(commonName: "Gika")
+        let validity = Certificate.Validity(notBefore: Date())
+
+//        let privateKey = P256.Signing.PrivateKey()
+        let privateKey = try! P256.Signing.PrivateKey(pemRepresentation: """
+            -----BEGIN EC PRIVATE KEY-----
+            MHcCAQEEIFs4s4/t2T2IXS+ugL2+azsZxk+FF8YF5M10qOya+JSSoAoGCCqGSM49
+            AwEHoUQDQgAEukAEYEOAWhT+VEdOnQx1jTYtFr+X9/AUwv7JQXH2KR2YmWrXquOA
+            mT51cAdD1yVlWIwNde55owIMJLrNiKdOnA==
+            -----END EC PRIVATE KEY-----
+            """)
+        let subjectPublicKeyInfo = Certificate.SubjectPublicKeyInfo.p256(privateKey.publicKey)
+
+        let tbsCert = Certificate.TBSCertificate(
+            version: .v3,
+            serialNo: serioNo,
+            signature: .ecdsaWithSHA256,
+            issuer: issuer,
+            validity: validity,
+            subject: issuer,
+            subjectPublicKeyInfo: subjectPublicKeyInfo)
+
+        let toSign = Data(tbsCert.toDER())
+//        var sha256 = SHA256()
+//        sha256.update(data: toSign)
+//        let digest = sha256.finalize()
+        let signature = try! privateKey.signature(for: toSign)
+
+        let cert = Certificate(
+            tbsCertificate: tbsCert,
+            signatureValue: .init(data: signature.derRepresentation))
+
+        print(Data(cert.toDER()).base64EncodedString())
+    }
+
+    func testSignature() {
+        let privateKey = try! P256.Signing.PrivateKey(pemRepresentation: """
+            -----BEGIN EC PRIVATE KEY-----
+            MHcCAQEEIFs4s4/t2T2IXS+ugL2+azsZxk+FF8YF5M10qOya+JSSoAoGCCqGSM49
+            AwEHoUQDQgAEukAEYEOAWhT+VEdOnQx1jTYtFr+X9/AUwv7JQXH2KR2YmWrXquOA
+            mT51cAdD1yVlWIwNde55owIMJLrNiKdOnA==
+            -----END EC PRIVATE KEY-----
+            """)
+
+        let text = "Hello\n"
+        var sha256 = SHA256()
+        sha256.update(data: text.data(using: .utf8)!)
+        let digest = sha256.finalize()
+        let signature = try! privateKey.signature(for: digest)
+
+        print(signature.derRepresentation.base64EncodedString())
+    }
+
+    func testVerify() {
+        let privateKey = try! P256.Signing.PrivateKey(pemRepresentation: """
+            -----BEGIN EC PRIVATE KEY-----
+            MHcCAQEEIFs4s4/t2T2IXS+ugL2+azsZxk+FF8YF5M10qOya+JSSoAoGCCqGSM49
+            AwEHoUQDQgAEukAEYEOAWhT+VEdOnQx1jTYtFr+X9/AUwv7JQXH2KR2YmWrXquOA
+            mT51cAdD1yVlWIwNde55owIMJLrNiKdOnA==
+            -----END EC PRIVATE KEY-----
+            """)
+        let publicKey = privateKey.publicKey
+        let signatureRaw = Data(base64Encoded: "MEUCIQCiDyOzYRQm6EaKj+WSvcUdQOrsmM1rXHDpoYZ3JHhhXwIgeHItvbFUq1iBxtwkFvqf/hfb4acugthtzfYNV9rxM+4=".data(using: .utf8)!)!
+        let text = "Hello\n"
+        var sha256 = SHA256()
+        sha256.update(data: text.data(using: .utf8)!)
+        let digest = sha256.finalize()
+        let signature = try! P256.Signing.ECDSASignature(derRepresentation: signatureRaw)
+        print(publicKey.isValidSignature(signature, for: digest))
+    }
+}
+
+// public key:
+// sign 304402205a3ec0f931f3b58ce4dcc11fd24f1142c0c9172eebb420b80b18c4fb9dbfce8502202477a367662838e3720f17e4123e0adb8b86142c83cc19557e30781711f077da
+
+func dataWithHexString(hex: String) -> Data {
+    var hex = hex
+    var data = Data()
+    while(hex.count > 0) {
+        let subIndex = hex.index(hex.startIndex, offsetBy: 2)
+        let c = String(hex[..<subIndex])
+        hex = String(hex[subIndex...])
+        var ch: UInt32 = 0
+        Scanner(string: c).scanHexInt32(&ch)
+        var char = UInt8(ch)
+        data.append(&char, count: 1)
+    }
+    return data
 }

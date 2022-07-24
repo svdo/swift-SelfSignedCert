@@ -36,17 +36,32 @@ enum DERPrimitivity: UInt8 {
 }
 
 struct DERHeader: Equatable {
-    var tag: DERTag
-    var tagClass: DERTagClass = .universal
-    var primitivity: DERPrimitivity = .primitive
+    var tagValue: UInt8
+    var tagClass: DERTagClass
+    var primitivity: DERPrimitivity
     var byteCount: Int
+
+    init(tagValue: UInt8, tagClass: DERTagClass = .universal, primitivity: DERPrimitivity = .primitive, byteCount: Int) {
+        self.tagValue = tagValue
+        self.tagClass = tagClass
+        self.primitivity = primitivity
+        self.byteCount = byteCount
+    }
+
+    init(tag: DERTag, primitivity: DERPrimitivity = .primitive, byteCount: Int) {
+        self = .init(tagValue: tag.rawValue, primitivity: primitivity, byteCount: byteCount)
+    }
+
+    init(asn1Tag: UInt8, byteCount: Int) {
+        self = .init(tagValue: asn1Tag, tagClass: .contextSpecific, primitivity: .construction, byteCount: byteCount)
+    }
 }
 
-private extension DERHeader {
+extension DERHeader {
     var headerByteCount: Int {
         var base = 2
         // Here we assume the additional byte can hold the tag completely.
-        if tag.rawValue >= 0b11111 {
+        if tagValue >= 0b11111 {
             base += 1
         }
         if byteCount > 0x7F {
@@ -59,12 +74,12 @@ private extension DERHeader {
         let identifier: UInt8 =
             (tagClass.rawValue << 6) +
             (primitivity.rawValue << 5) +
-            min(tag.rawValue, 0b11111)
+            min(tagValue, 0b11111)
         bytes.append(identifier)
 
-        if tag.rawValue >= 0b11111 {
-            assert(tag.rawValue.leadingZeroBitCount > 0)
-            bytes.append(tag.rawValue)
+        if tagValue >= 0b11111 {
+            assert(tagValue.leadingZeroBitCount > 0)
+            bytes.append(tagValue)
         }
 
         if byteCount <= 0x7F {
@@ -269,6 +284,11 @@ struct DERList: DEREncodable {
     init(tag: DERTag, @DERListBuilder buildContent: () -> [any DEREncodable]) {
         self.tag = tag
         self.list = buildContent()
+    }
+
+    init(tag: DERTag, list: [any DEREncodable]) {
+        self.tag = tag
+        self.list = list
     }
 
     var derHeader: DERHeader {

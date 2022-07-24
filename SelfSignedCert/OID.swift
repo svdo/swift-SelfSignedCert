@@ -77,7 +77,7 @@ extension OID {
     //    static let rsaWithMD2AlgorithmID = OID(components:[1, 2, 840, 113549, 1, 1, 2])
     
     // MARK: Subject
-    static let commonName: Self = [2, 5, 4, 3]
+
     //    static let givenNameOID = OID(components:[2, 5, 4, 42])
     //    static let surnameOID = OID(components:[2, 5, 4, 4])
     //    static let descriptionOID = OID(components:[2, 5, 4, 13])
@@ -96,4 +96,22 @@ extension OID {
     //    static let extendedKeyUsageAnyOID = OID(components:[2, 5, 29, 37, 0])
     //    static let subjectAltNameOID = OID(components:[2, 5, 29, 17])
     
+}
+
+extension OID: ASN1Node {}
+
+extension OID {
+    func adding(_ values: Int...) -> Self {
+        .init(components: components + values)
+    }
+}
+
+extension OID {
+    /// Standard naming attributes
+    static let at: OID = [2, 5, 4]
+
+    static let commonName: OID = .at.adding(3)
+
+    static let pkcs9: OID = [1, 2, 840, 113549, 1, 9]
+    static let emailAddress: OID = .pkcs9.adding(1)
 }
