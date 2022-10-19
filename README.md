@@ -24,3 +24,26 @@ by a security expert. Until it has, please use with caution! And in any case
 
 If you are a security expert and you want to review this framework, please
 contact me.
+
+## Usage
+
+```swift
+guard let identity = SecIdentity.create(
+    subjectCommonName: "common name",
+    subjectEmailAddress: "email@example.com") else {
+    return
+}
+
+```
+
+This will give you a self-signed `SecIdentity?` that is already stored in the
+keychain. See also [SecIdentity+SelfSigned.swift][1] for functions to retrieve
+previously created identities from the keychain.
+
+## Related Library
+
+You may want to have a look at [swift-SecurityExtensions][2] for some helpers
+to more easily use `SecIdentity`, `SecCertificate`, and `SecKey`.
+
+[1]: https://github.com/svdo/swift-SelfSignedCert/blob/master/SelfSignedCert/SecIdentity%2BSelfSigned.swift
+[2]: https://github.com/svdo/swift-SecurityExtensions
